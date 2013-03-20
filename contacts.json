@@ -2,6 +2,7 @@
     {
         "firstName": "Aierra",
         "lastName": "Bell",
+        "email": "email@domain.com",
         "title": "Future Infrastructure Supervisor",
         "city": "Palo Alto",
         "state": "California",
@@ -14,6 +15,7 @@
     {
         "firstName": "Berny",
         "lastName": "Beahan",
+        "email": "email@domain.com",
         "title": "Global Response Facilitator",
         "city": "Amsterdam",
         "state": "North Holland",
@@ -27,6 +29,7 @@
     {
         "firstName": "Henderson",
         "lastName": "Auer",
+        "email": "email@domain.com",
         "title": "Customer Configuration Coordinator",
         "city": "Palo Alto",
         "state": "California",
@@ -40,6 +43,7 @@
     {
         "firstName": "Hector",
         "lastName": "Will",
+        "email": "email@domain.com",
         "title": "Dynamic Identity Supervisor",
         "city": "Foster City",
         "state": "California",
@@ -53,6 +57,7 @@
     {
         "firstName": "Chelsea",
         "lastName": "Grand",
+        "email": "email@domain.com",
         "title": "Dynamic Response Planner",
         "city": "Redwood City",
         "state": "California",
@@ -66,6 +71,7 @@
     {
         "firstName": "Onie",
         "lastName": "Feest",
+        "email": "email@domain.com",
         "title": "International Communications Associate",
         "city": "Palo Alto",
         "state": "California",
@@ -78,6 +84,7 @@
     {
         "firstName": "Celia",
         "lastName": "Golf",
+        "email": "email@domain.com",
         "title": "Direct Brand Strategist",
         "city": "Palo Alto",
         "state": "California",
@@ -90,6 +97,7 @@
     {
         "firstName": "Tierra",
         "lastName": "Bell",
+        "email": "email@domain.com",
         "title": "Future Infrastructure Supervisor",
         "city": "Palo Alto",
         "state": "California",
@@ -102,6 +110,7 @@
     {
         "firstName": "Derny",
         "lastName": "Beahan",
+        "email": "email@domain.com",
         "title": "Global Response Facilitator",
         "city": "Amsterdam",
         "state": "North Holland",
@@ -115,6 +124,7 @@
     {
         "firstName": "Eenderson",
         "lastName": "Auer",
+        "email": "email@domain.com",
         "title": "Customer Configuration Coordinator",
         "city": "Palo Alto",
         "state": "California",
@@ -128,6 +138,7 @@
     {
         "firstName": "Fector",
         "lastName": "Will",
+        "email": "email@domain.com",
         "title": "Dynamic Identity Supervisor",
         "city": "Foster City",
         "state": "California",
@@ -141,6 +152,7 @@
     {
         "firstName": "Ghelsea",
         "lastName": "Grand",
+        "email": "email@domain.com",
         "title": "Dynamic Response Planner",
         "city": "Redwood City",
         "state": "California",
@@ -154,6 +166,7 @@
     {
         "firstName": "inie",
         "lastName": "Feest",
+        "email": "email@domain.com",
         "title": "International Communications Associate",
         "city": "Palo Alto",
         "state": "California",
@@ -166,6 +179,7 @@
     {
         "firstName": "jelia",
         "lastName": "Golf",
+        "email": "email@domain.com",
         "title": "Direct Brand Strategist",
         "city": "Palo Alto",
         "state": "California",
@@ -178,6 +192,7 @@
     {
         "firstName": "kierra",
         "lastName": "Bell",
+        "email": "email@domain.com",
         "title": "Future Infrastructure Supervisor",
         "city": "Palo Alto",
         "state": "California",
@@ -190,6 +205,7 @@
     {
         "firstName": "lerny",
         "lastName": "Beahan",
+        "email": "email@domain.com",
         "title": "Global Response Facilitator",
         "city": "Amsterdam",
         "state": "North Holland",
@@ -203,6 +219,7 @@
     {
         "firstName": "menderson",
         "lastName": "Auer",
+        "email": "email@domain.com",
         "title": "Customer Configuration Coordinator",
         "city": "Palo Alto",
         "state": "California",
@@ -216,6 +233,7 @@
     {
         "firstName": "nector",
         "lastName": "Will",
+        "email": "email@domain.com",
         "title": "Dynamic Identity Supervisor",
         "city": "Foster City",
         "state": "California",
@@ -229,6 +247,7 @@
     {
         "firstName": "phelsea",
         "lastName": "Grand",
+        "email": "email@domain.com",
         "title": "Dynamic Response Planner",
         "city": "Redwood City",
         "state": "California",
@@ -242,6 +261,7 @@
     {
         "firstName": "qnie",
         "lastName": "Feest",
+        "email": "email@domain.com",
         "title": "International Communications Associate",
         "city": "Palo Alto",
         "state": "California",
@@ -254,6 +274,7 @@
     {
         "firstName": "relia",
         "lastName": "Golf",
+        "email": "email@domain.com",
         "title": "Direct Brand Strategist",
         "city": "Palo Alto",
         "state": "California",
@@ -266,6 +287,7 @@
     {
         "firstName": "sierra",
         "lastName": "Bell",
+        "email": "email@domain.com",
         "title": "Future Infrastructure Supervisor",
         "city": "Palo Alto",
         "state": "California",
@@ -278,6 +300,7 @@
     {
         "firstName": "uerny",
         "lastName": "Beahan",
+        "email": "email@domain.com",
         "title": "Global Response Facilitator",
         "city": "Amsterdam",
         "state": "North Holland",
@@ -291,6 +314,7 @@
     {
         "firstName": "venderson",
         "lastName": "Auer",
+        "email": "email@domain.com",
         "title": "Customer Configuration Coordinator",
         "city": "Palo Alto",
         "state": "California",
@@ -304,6 +328,7 @@
     {
         "firstName": "Wector",
         "lastName": "Will",
+        "email": "email@domain.com",
         "title": "Dynamic Identity Supervisor",
         "city": "Foster City",
         "state": "California",
@@ -317,6 +342,7 @@
     {
         "firstName": "Xhelsea",
         "lastName": "Grand",
+        "email": "email@domain.com",
         "title": "Dynamic Response Planner",
         "city": "Redwood City",
         "state": "California",
@@ -330,6 +356,7 @@
     {
         "firstName": "Ynie",
         "lastName": "Feest",
+        "email": "email@domain.com",
         "title": "International Communications Associate",
         "city": "Palo Alto",
         "state": "California",
@@ -342,6 +369,7 @@
     {
         "firstName": "Zelia",
         "lastName": "Golf",
+        "email": "email@domain.com",
         "title": "Direct Brand Strategist",
         "city": "Palo Alto",
         "state": "California",

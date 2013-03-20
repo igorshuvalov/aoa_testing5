@@ -5,6 +5,7 @@ Ext.define('testing.model.Contact', {
         fields: [
             'firstName',
             'lastName',
+            'email',
             'headshot',
             'title',
             'telephone',

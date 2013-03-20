@@ -5,6 +5,54 @@ Ext.Loader.setPath({
 });
 //</debug>
 
+Ext.define('UserFilter', { 
+    singleton: true,
+    filterKey: '',
+    filterType: 'practice',
+    filterAction: function() {
+        var value = this.filterKey,
+            store = Ext.getStore('Contacts');
+
+        store.clearFilter();
+
+        if (value) {
+            var searches = value.split(' '),
+                regexps = [],
+                i;
+
+            for (i = 0; i < searches.length; i++) {
+                if (!searches[i]) continue;
+
+                regexps.push(new RegExp(searches[i], 'i'));
+            }
+
+            store.filter(function(record) {
+                var matched = [];
+
+                for (i = 0; i < regexps.length; i++) {
+                    var search = regexps[i],
+                        didMatch = record.get('firstName').match(search) || record.get('lastName').match(search);
+
+                    matched.push(didMatch);
+                }
+
+                if (regexps.length > 1 && matched.indexOf(false) != -1) {
+                    return false;
+                } else {
+                    return matched[0];
+                }
+            });
+        }
+        
+        store.filter(function(record) {
+            if (record.get('usertype') == UserFilter.filterType)
+                return true;
+            else
+                return false;
+        });
+    }
+});
+
 Ext.application({
     name: 'testing',
 
@@ -12,7 +60,7 @@ Ext.application({
         'Ext.MessageBox'
     ],
 
-    views: ['Main','sidebar','mainpanels','Contacts'],
+    views: ['Main', 'sidebar', 'mainpanels', 'rightpanel', 'Contacts'],
 	stores: ['Contacts'],
 	models: ['Contact'],
 	constrollers: ['Application'],

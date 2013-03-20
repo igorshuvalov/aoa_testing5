@@ -52,6 +52,7 @@ Ext.define('testing.controller.Application', {
     },
 
     onContactSelect: function(list, index, node, record) {
+        alert('aaa');
 		console.log(list, index, node, record)
         var editButton = this.getEditButton();
 

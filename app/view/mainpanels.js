@@ -4,51 +4,8 @@ Ext.define('testing.view.mainpanels', {
 	requires: [
 		'Ext.TitleBar'
 	],
-    searchkey: '',
-    filtertype: 'practice',
-    filterAction: function() {
-        var value = this.searchkey,
-            store = Ext.getStore('Contacts');
-
-        store.clearFilter();
-
-        if (value) {
-            var searches = value.split(' '),
-                regexps = [],
-                i;
-
-            for (i = 0; i < searches.length; i++) {
-                if (!searches[i]) continue;
-
-                regexps.push(new RegExp(searches[i], 'i'));
-            }
-
-            store.filter(function(record) {
-                var matched = [];
-
-                for (i = 0; i < regexps.length; i++) {
-                    var search = regexps[i],
-                        didMatch = record.get('firstName').match(search) || record.get('lastName').match(search);
-
-                    matched.push(didMatch);
-                }
-
-                if (regexps.length > 1 && matched.indexOf(false) != -1) {
-                    return false;
-                } else {
-                    return matched[0];
-                }
-            });
-        }
-        
-        store.filter(function(record) {
-            if (record.get('usertype') == filtertype)
-                return true;
-            else
-                return false;
-        });
-    },
     config: {
+        id: 'mainpanels',
         layout: 'hbox',
         padding: '20 10',
         height: 500,
@@ -56,10 +13,8 @@ Ext.define('testing.view.mainpanels', {
 			{
 				xtype: 'panel',
                 padding: '10 20 10 10',
-				flex: 1,
-				/*html: 'Left Panel, 1/3rd of total size',
-				style: 'background-color: #5E99CC;'*/
-                
+                width: '35%',
+				flex: 1,                
 				items: [
                     {
                         xtype : 'button',
@@ -78,14 +33,14 @@ Ext.define('testing.view.mainpanels', {
                         listeners: {
                             scope: this,
                             clearicontap: function() {
-                                this.searchkey = '';
-                                this.filterAction();
+                                UserFilter.filterKey = '';
+                                UserFilter.filterAction();
                             },
                             keyup: function(field) {
-                                this.searchkey = field.getValue();
-                                this.filterAction();
-                            },
-                        },
+                                UserFilter.filterKey = field.getValue();
+                                UserFilter.filterAction();
+                            }
+                        }
                     },
                     {
                         xtype: 'spacer',
@@ -100,20 +55,21 @@ Ext.define('testing.view.mainpanels', {
                                 width: '50%',
                                 listeners: {
                                     activate: function() {
-                                        //this.filtertype = 'practice';
-                                        //this.filterAction();
+                                        UserFilter.filterAction();
                                     }
+                                },
+                                handler: function() {
+                                    UserFilter.filterType = 'practice';
+                                    UserFilter.filterAction();
                                 }
                             },
                             {
                                 text: 'By Doctor',
                                 width: '50%',
-                                listeners: {
-                                    activate: function() {
-                                        //this.filtertype = 'doctor';
-                                        //this.filterAction();
-                                    }
-                                }                                
+                                handler: function() {
+                                    UserFilter.filterType = 'doctor';
+                                    UserFilter.filterAction();
+                                }
                             }
                         ]
                     },
@@ -122,16 +78,30 @@ Ext.define('testing.view.mainpanels', {
                         padding: '10'
                     },
 					{
-						xtype: 'contacts'
+						xtype: 'contacts',
+                        listeners: {
+                            itemtap: function(list, index, item, e) {
+                                var rightPanel = Ext.getCmp('rightpanel');
+                                rightPanel.setHtml(
+                                    '<h3 style="font-size: 30px;">' + e.get('firstName') + ' ' + e.get('lastName') + '</h3>'
+                                    + (e.get('telephone') ? ('<BR>' + e.get('telephone')) : '')
+                                    + '<BR>' + e.get('city') + ', ' + e.get('state')
+                                    + '<BR>' + e.get('email')
+                                );
+                                /*rightPanel.add({
+                                    xtype: 'button',
+                                    text: e.firstName
+                                });*/
+                            }
+                        }
 					}
 				]
 			},
 			{
-				xtype: 'panel',
-				flex: 2,
-				html: 'Right Panel, 2/3rds of total size',
-				style: 'background-color: #759E60;'
-			}
+                xtype: 'rightpanel',
+                width: '65%',
+                height: 500
+            }
 		]
     }
 });

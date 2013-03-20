@@ -11,8 +11,7 @@ Ext.define('testing.view.Contacts', {
         indexBar: true,
         itemTpl: [
             '<div class="headshot" style="background-image:url(resources/images/headshots/{headshot});"></div>',
-            '{firstName} {lastName}',
-            '<span>{title}</span>'
+            '{firstName} {lastName}'
         ].join('')
     }
 });
