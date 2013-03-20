@@ -1,0 +1,8 @@
+Edit loading image:
+ -index.html
+ 
+Add theme stylesheet:
+ -app.json > add to CSS files
+
+Images path:
+ -resouces/images > needs to be created
