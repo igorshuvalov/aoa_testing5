@@ -1,3 +1,5 @@
+var aoa = {};
+aoa.selectedASM = null;
 Ext.define('aoatheme.view.Main', {
     extend: 'Ext.Container',
     xtype: 'main',
@@ -6,7 +8,6 @@ Ext.define('aoatheme.view.Main', {
     ],
     config: {
         tabBarPosition: 'bottom',
-
         items: [
             {
                 title: 'Welcome',
@@ -15,78 +16,78 @@ Ext.define('aoatheme.view.Main', {
                 styleHtmlContent: true,
                 scrollable: true,
 
-                items: {
-                    docked: 'top',
-                    xtype: 'titlebar',
-                    title: 'Account Opportunity Analysis',
-					cls: 'aoa-titlebar1',
-					items: [
-						{
-							text: 'Feedback' , align: 'right',
-							cls: 'aoa-titlebar1-right-btn',
-							ui: 'small',
-							handler: function() {
-								if (!this.overlay) {
-									this.overlay = Ext.Viewport.add({
-										xtype: 'panel',
-										modal: true,
-										cls: 'aoa-modal-bg',
-										hideOnMaskTap: false,
-										showAnimation: {
-											type: 'popIn',
-											duration: 250,
-											easing: 'ease-out'
-										},
-										hideAnimation: {
-											type: 'popOut',
-											duration: 250,
-											easing: 'ease-out'
-										},
-										centered: true,
-										height: 250,
-										width: 350,
-										styleHtmlContent: true,										
-										html: '<p>Use this application to assess multifocal potential within a clinic after observing 1-2 days of practices, from initial consultation to post-op evaluation.</p>',
-										items: [
-											{
-												docked: 'top',
-												xtype: 'toolbar',
-												title: 'Welcome',
-												cls: 'aoa-modal-toolbar'
+                items: [
+					{
+						docked: 'top',
+						xtype: 'titlebar',
+						title: 'Account Opportunity Analysis',
+						cls: 'aoa-titlebar1',
+						items: [
+							{
+								text: 'Feedback' , align: 'right',
+								cls: 'aoa-titlebar1-right-btn',
+								ui: 'small',
+								handler: function() {
+									if (!this.overlay) {
+										this.overlay = Ext.Viewport.add({
+											xtype: 'panel',
+											modal: true,
+											cls: 'aoa-modal-bg',
+											hideOnMaskTap: false,
+											showAnimation: {
+												type: 'popIn',
+												duration: 250,
+												easing: 'ease-out'
 											},
-											{
-												docked: 'bottom',
-												xtype: 'toolbar',
-												cls: 'aoa-modal-toolbar',
-												items: [
-													{
-														xtype: 'spacer'
-													},
-													{   
-														scope: this,
-														cls: 'aoa-modal-btn1',
-														ui: 'small',
-														text: 'Get Started',
-														handler: function() {
-															this.overlay.hide();	
-															/*var sidebar = Ext.create('aoatheme.view.sidebar');											
-															Ext.Viewport.add(sidebar);
-															sidebar.show()*/
+											hideAnimation: {
+												type: 'popOut',
+												duration: 250,
+												easing: 'ease-out'
+											},
+											centered: true,
+											height: 250,
+											width: 350,
+											styleHtmlContent: true,										
+											html: '<p>Use this application to assess multifocal potential within a clinic after observing 1-2 days of practices, from initial consultation to post-op evaluation.</p>',
+											items: [
+												{
+													docked: 'top',
+													xtype: 'toolbar',
+													title: 'Welcome',
+													cls: 'aoa-modal-toolbar'
+												},
+												{
+													docked: 'bottom',
+													xtype: 'toolbar',
+													cls: 'aoa-modal-toolbar',
+													items: [
+														{
+															xtype: 'spacer'
+														},
+														{   
+															scope: this,
+															cls: 'aoa-modal-btn1',
+															ui: 'small',
+															text: 'Get Started',
+															handler: function() {
+																aoa.selectedASM = 1;
+																this.overlay.hide();
+																Ext.Viewport.setActiveItem({xtype:'sidebar'});
+															}
 														}
-													}
-												]
-											}												
-										],
-										scrollable: true
-									});
+													]
+												}												
+											],
+											scrollable: true
+										});
+									}
+
+									this.overlay.show();
 								}
-
-								this.overlay.show();
 							}
-						}
-					]
-                },
-
+						]
+					}				
+				],
                 html: [
                     "You've just generated a new Sencha Touch 2 project. What you're looking at right now is the ",
                     "contents of <a target='_blank' href=\"app/view/Main.js\">app/view/Main.js</a> - edit that file ",

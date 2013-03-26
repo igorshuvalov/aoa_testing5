@@ -8,9 +8,13 @@ Ext.define('aoatheme.controller.Application', {
             contacts: 'contacts',
             showContact: 'contact-show',
             editContact: 'contact-edit',
-            saveButton: '#saveButton'
+            saveButton: '#saveButton',
+			saveNewPractice: '#save-new-practice'
         },
-
+		init: function () {
+			this.callParent();
+			console.log("launch");
+		},
         control: {
             main: {
                 push: 'onMainPush',
@@ -27,10 +31,15 @@ Ext.define('aoatheme.controller.Application', {
             },
             editContact: {
                 change: 'onContactChange'
-            }
+            },
+			saveNewPractice: {
+				tap: 'saveNewPractice'
+			}
         }
     },
-
+	saveNewPractice: function(){
+		console.log('saveNewPractice')
+	},
     onMainPush: function(view, item) {
         var editButton = this.getEditButton();
 

@@ -1,14 +1,15 @@
 Ext.define('aoatheme.view.sidebar', {
     extend: 'Ext.Container',
     xtype: 'sidebar',
-	requires: [
+	/*requires: [
 		'Ext.TitleBar'
-	],
+	],	*/
     config: {
         title: 'Edit',
         layout: 'fit',
 		iconCls: 'home',
-
+		showAnimation: 'slideIn',
+		hideAnimation: 'slideOut',
         items: [
             {
                 title: 'Sidebar',
@@ -18,20 +19,23 @@ Ext.define('aoatheme.view.sidebar', {
 					{
 						docked: 'top',
 						xtype: 'titlebar',
+						cls: 'aoa-titlebar1',
 						title: 'Page Name',
 						items: [
 							{
 								text: 'Back',
 								ui: 'back',
+								cls: 'aoa-modal-btn1',
 								align: 'left',
 								handler: function() {
-									var main = Ext.create('aoatheme.view.Main');
-									Ext.Viewport.add(main);
-									main.show()
 									Ext.Viewport.getActiveItem().hide()
+									Ext.Viewport.setActiveItem({xtype:'main'});
 								}
 							}						
 						]
+					},
+					{
+						html: '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eros ipsum, lobortis quis interdum non, commodo vitae elit. Aliquam purus nulla, feugiat vitae bibendum eu, laoreet ut metus. Aliquam non ligula nisl, vel commodo neque. Quisque tristique pretium nunc, ac adipiscing nisi blandit quis. Ut pulvinar quam vel nibh euismod vulputate. Proin purus est, porta nec commodo id, interdum sit amet sem. Nulla eros lectus, ullamcorper sit amet dapibus lacinia, eleifend ac dui. Nulla facilisi. Vestibulum ornare lorem non mauris lobortis ac sodales purus dignissim. Curabitur consectetur orci nisi, et dignissim lacus. Aliquam posuere nisl sed lectus ullamcorper iaculis. Nulla euismod nulla nulla, sed tincidunt mauris.</p><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eros ipsum, lobortis quis interdum non, commodo vitae elit. Aliquam purus nulla, feugiat vitae bibendum eu, laoreet ut metus. Aliquam non ligula nisl, vel commodo neque. Quisque tristique pretium nunc, ac adipiscing nisi blandit quis. Ut pulvinar quam vel nibh euismod vulputate. Proin purus est, porta nec commodo id, interdum sit amet sem. Nulla eros lectus, ullamcorper sit amet dapibus lacinia, eleifend ac dui. Nulla facilisi. Vestibulum ornare lorem non mauris lobortis ac sodales purus dignissim. Curabitur consectetur orci nisi, et dignissim lacus. Aliquam posuere nisl sed lectus ullamcorper iaculis. Nulla euismod nulla nulla, sed tincidunt mauris.</p>'
 					}
 				]
 				
@@ -39,89 +43,3 @@ Ext.define('aoatheme.view.sidebar', {
         ]
     }
 });
-/*
-Ext.define('testing.view.sidebar', {
-    extend: 'Ext.tab.Panel',
-    xtype: 'sidebar',
-    requires: [
-        'Ext.Toolbar',
-		'Ext.TitleBar'
-    ],
-    config: {
-        tabBarPosition: 'top',
-        items: [
-            {
-                title: 'Application Name',
-                styleHtmlContent: true,
-                scrollable: true,					
-                items: {
-                    docked: 'top',
-					xtype: 'titlebar',
-					title: 'Application Name 2',
-					items:[
-						{
-							text: 'Feedback 2' , align: 'right',
-							handler: function() {
-								if (!this.overlay) {
-									this.overlay = Ext.Viewport.add({
-										xtype: 'panel',
-										modal: true,
-										hideOnMaskTap: false,
-										showAnimation: {
-											type: 'popIn',
-											duration: 250,
-											easing: 'ease-out'
-										},
-										hideAnimation: {
-											type: 'popOut',
-											duration: 250,
-											easing: 'ease-out'
-										},
-										centered: true,
-										width: Ext.os.deviceType == 'Phone' ? 260 : 400,
-										height: Ext.os.deviceType == 'Phone' ? 220 : 400,
-										styleHtmlContent: true,
-										html: '<p>This is a modal, centered and floating panel. hideOnMaskTap is true by default so ' +
-											'we can tap anywhere outside the overlay to hide it.</p>',
-										items: [
-											{
-												docked: 'top',
-												xtype: 'toolbar',
-												title: 'Welcome Message'
-											},
-											{
-												docked: 'bottom',
-												xtype: 'toolbar',
-												items: [
-													{
-														xtype: 'spacer'
-													},
-													{   
-														scope: this,
-														text: 'Close',
-														handler: function() {
-															this.overlay.hide();													
-														}
-													}
-												]
-											}											
-										],
-										scrollable: true
-									});
-								}
-
-								this.overlay.show();
-							}
-						}
-					]
-                },
-
-                html: [
-                    "You've just generated a new Sencha Touch 2 project. What you're looking at right now is the ",
-                    "contents of <a target='_blank' href=\"app/view/Main.js\">app/view/Main.js</a> - edit that file ",
-                    "and refresh to change what's rendered here."
-                ].join("")
-            }
-        ]
-    }
-});*/
