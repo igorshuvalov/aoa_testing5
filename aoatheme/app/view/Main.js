@@ -24,6 +24,7 @@ Ext.define('aoatheme.view.Main', {
 						{
 							text: 'Feedback' , align: 'right',
 							cls: 'aoa-titlebar1-right-btn',
+							ui: 'small',
 							handler: function() {
 								if (!this.overlay) {
 									this.overlay = Ext.Viewport.add({
@@ -64,6 +65,7 @@ Ext.define('aoatheme.view.Main', {
 													{   
 														scope: this,
 														cls: 'aoa-modal-btn1',
+														ui: 'small',
 														text: 'Get Started',
 														handler: function() {
 															this.overlay.hide();	

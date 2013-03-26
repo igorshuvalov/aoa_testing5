@@ -81,17 +81,96 @@ Ext.define('testing.view.mainpanels', {
 						xtype: 'contacts',
                         listeners: {
                             itemtap: function(list, index, item, e) {
+                                var detailsPanel = Ext.create('Ext.Panel', {
+                                    title: 'Details',
+                                    layout: 'vbox',
+                                    width: '100%',
+                                    items: [
+                                        {// Details information
+                                            xtype: 'panel',
+                                            layout: 'vbox',
+                                            items: [
+                                                {// Display information
+                                                    xtype: 'panel',
+                                                    layout: 'hbox',
+                                                    items: [
+                                                        {
+                                                            xtype: 'panel',
+                                                            html: e.get('firstName') + ' ' + e.get('lastName'),
+                                                            width: '40%'
+                                                        },
+                                                        {
+                                                            xtype: 'panel',
+                                                            html: e.get('telephone') + '<BR>' + e.get('city') + ', ' + e.get('state'),
+                                                            width: '40%'
+                                                        },
+                                                        {
+                                                            xtype: 'button',
+                                                            text: 'Edit',
+                                                            width: '20%'
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: 'spacer',
+                                                    padding: '20'
+                                                },
+                                                {// Note box
+                                                    xtype: 'textareafield',
+                                                    ui: 'round',
+                                                    name: 'note',
+                                                    fieldLabel: 'Note',
+                                                    placeHolder: 'Note',
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            xtype: 'panel',
+                                            padding: '20'
+                                        },
+                                        {// Assessments
+                                            xtype: 'panel',
+                                            layout: 'vbox',
+                                            items: [
+                                                {
+                                                    xtype: 'toolbar',
+                                                    html: 'Assessments',
+                                                    padding: 10,
+                                                    items: [
+                                                        {
+                                                            xtype: 'button',
+                                                            text: 'Add',
+                                                            docked: 'right',
+                                                            width: 100,
+                                                            handler: function() {
+                                                                var assessmentStore = Ext.getStore('Assessment');
+                                                                var assessmentModel = Ext.create('testing.model.Assessment', {
+                                                                    'regDate' : '26/03/2013',
+                                                                    'status' : 'In Progress',
+                                                                    'name' : 'Marcus Welby'
+                                                                });
+                                                                assessmentStore.add(assessmentModel);
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: 'list',
+                                                    height: 138,
+                                                    store: 'Assessment',
+                                                    itemTpl: '<div><strong>{regDate}</strong> {status} {name}</div>'
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                });
+                                
+                                var assessmentStore = Ext.getStore('Assessment');
+                                assessmentStore.removeAll();
+                                
                                 var rightPanel = Ext.getCmp('rightpanel');
-                                rightPanel.setHtml(
-                                    '<h3 style="font-size: 30px;">' + e.get('firstName') + ' ' + e.get('lastName') + '</h3>'
-                                    + (e.get('telephone') ? ('<BR>' + e.get('telephone')) : '')
-                                    + '<BR>' + e.get('city') + ', ' + e.get('state')
-                                    + '<BR>' + e.get('email')
-                                );
-                                /*rightPanel.add({
-                                    xtype: 'button',
-                                    text: e.firstName
-                                });*/
+                                rightPanel.removeAll(true, true);
+                                rightPanel.add([detailsPanel]);
                             }
                         }
 					}

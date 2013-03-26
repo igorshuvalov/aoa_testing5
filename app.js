@@ -61,8 +61,8 @@ Ext.application({
     ],
 
     views: ['Main', 'sidebar', 'mainpanels', 'rightpanel', 'Contacts'],
-	stores: ['Contacts'],
-	models: ['Contact'],
+	stores: ['Contacts', 'Assessment'],
+	models: ['Contact', 'Assessment'],
 	constrollers: ['Application'],
 
     icon: {

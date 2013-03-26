@@ -2,8 +2,25 @@ Ext.define('aoatheme.view.Contacts', {
     extend: 'Ext.List',
     xtype: 'contacts',
 
-    config: {
-		items: [		
+    config: {		
+		items: [
+			{
+                    xtype: 'toolbar',
+                    docked: 'top',
+					cls: 'aoa-list-search-toolbar',
+					items: [
+						{ xtype: 'spacer' },
+						{
+							xtype: 'button',
+							text: 'Add Account',
+							cls: 'aoa-left-panel-btn1',
+							ui: 'normal',
+							width: 237			
+						},
+						{ xtype: 'spacer' }					
+					]
+				
+			},		
 			{
                     xtype: 'toolbar',
                     docked: 'top',
@@ -33,8 +50,8 @@ Ext.define('aoatheme.view.Contacts', {
 						width: 237,
 						items: [
 							
-							{ text: 'By Account', pressed: true , cls: 'aoa-left-panel-toggle'}, // on
-							{ text: 'By Surgeon', cls: 'aoa-left-panel-toggle' },										
+							{ text: 'By Account', pressed: true , cls: 'aoa-left-panel-toggle',ui: 'normal'}, // on
+							{ text: 'By Surgeon', cls: 'aoa-left-panel-toggle',ui: 'normal'},										
 						]
 					},
 					{ xtype: 'spacer' }
@@ -43,16 +60,14 @@ Ext.define('aoatheme.view.Contacts', {
 			{
 				title: 'Address Book',
 				cls: 'x-contacts',
-				store: 'Contacts',
-				height: 300,
+				store: 'Contacts',				
 				grouped: true,
-				pinHeaders: false,
+				height: 600,
+				pinHeaders: false,				
 				xtype: 'list',
 				emptyText: '<div style="margin-top: 20px; text-align: center">No Matching Items</div>',
 				itemTpl: [
-					'<div class="headshot" style="background-image:url(resources/images/headshots/{headshot});"></div>',
-					'{firstName} {lastName}',
-					'<span>{title}</span>'
+					'{firstName} {lastName}'
 				].join('')							
 
 	

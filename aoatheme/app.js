@@ -13,8 +13,8 @@ Ext.application({
     ],
 
     views: ['Main','sidebar','mainpanels','Contacts'],
-	stores: ['Contacts'],
-	models: ['Contact'],
+	stores: ['Contacts','Assessments'],
+	models: ['Contact','Assessments'],
 	constrollers: ['Application'],
 
     icon: {
