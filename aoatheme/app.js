@@ -13,8 +13,8 @@ Ext.application({
     ],
 
     views: ['Main','sidebar','mainpanels','Contacts'],
-	stores: ['Contacts','Assessments','Doctors','LocalDoctors','usstates','newPractice'],
-	models: ['Contact','Assessments','Doctors','LocalDoctors','PracticeFields','usstates'],
+	stores: ['Contacts','Assessments','Doctors','LocalDoctors','usstates','newPractice','newDoctor'],
+	models: ['Contact','Assessments','Doctors','LocalDoctors','PracticeFields','usstates','DoctorFields'],
 	constrollers: ['Application'],
 
     icon: {

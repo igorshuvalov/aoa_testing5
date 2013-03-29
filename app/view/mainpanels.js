@@ -1,8 +1,15 @@
-Ext.define('testing.view.mainpanels', {
+Ext.define('aoa.view.mainpanels', {
     extend: 'Ext.Panel',
     xtype: 'mainpanels',
 	requires: [
-		'Ext.TitleBar'
+		'Ext.TitleBar',
+        'Ext.form.*',
+        'Ext.field.*',
+        'Ext.Button',
+        'Ext.Toolbar',
+        'Ext.data.Store',
+        'Ext.data.proxy.LocalStorage',
+        'aoa.model.LocalPractice'
 	],
     config: {
         id: 'mainpanels',
@@ -19,7 +26,166 @@ Ext.define('testing.view.mainpanels', {
                     {
                         xtype : 'button',
                         ui: 'normal',
-                        text: 'Add Practice'
+                        text: 'Add Practice',
+                        handler: function() {
+                            if (!this.overlay) {
+                                this.overlay = Ext.Viewport.add({
+                                    xtype: 'panel',
+                                    modal: true,
+                                    hideOnMaskTap: false,
+                                    showAnimation: {
+                                        type: 'popIn',
+                                        duration: 250,
+                                        easing: 'ease-out'
+                                    },
+                                    hideAnimation: {
+                                        type: 'popOut',
+                                        duration: 250,
+                                        easing: 'ease-out'
+                                    },
+                                    centered: true,
+                                    height: 560,
+                                    width: 650,
+                                    styleHtmlContent: true,                                        
+                                    items: [
+                                        {
+                                            docked: 'top',
+                                            xtype: 'toolbar',
+                                            title: 'Add New Practice',
+                                            items: [
+                                                {
+                                                    scope: this,
+                                                    ui: 'back',
+                                                    text: 'Back',
+                                                    handler: function() {
+                                                        this.overlay.hide();
+                                                    }
+                                                },
+                                                {
+                                                    xtype: 'spacer'
+                                                },
+                                                {
+                                                    ui: 'normal',
+                                                    scope: this,
+                                                    text: 'Done',
+                                                    id: 'save-new-practice',
+                                                    handler: function() {
+                                                        var form = Ext.getCmp('add-new-practice-form'),
+                                                            formValues = form.getValues();
+                                                        if(formValues.name.length == 0) {
+                                                            // integrate required*
+                                                        }
+                                                        else {
+                                                            var date = new Date();
+                                                            formValues.practiceid = date.getTime();
+                                                            var localPracticeStore = Ext.getStore('LocalPractice');
+                                                            var localPracticeModel = new aoa.model.LocalPractice(formValues);
+                                                            localPracticeStore.load();
+                                                            localPracticeStore.add(localPracticeModel);
+                                                            localPracticeStore.sync();
+                                                            this.overlay.hide();
+                                                            form.reset();
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            html: 
+                                                '<div class="aoa-modal-note">'+
+                                                '    <span class="aoa-note-title">Enter the account details</span>'+
+                                                '    <span class="aoa-note-subtitle">*Indicates required field.</span>'+
+                                                '</div>'
+                                        },
+                                        {
+                                            xtype: 'formpanel',
+                                            height: 430,
+                                            scrollable: null,
+                                            id: 'add-new-practice-form',
+                                            items: [
+                                                {
+                                                    xtype: 'toolbar',
+                                                    docked: 'bottom',
+                                                    items: [
+                                                        { xtype: 'spacer' },
+                                                        {
+                                                            ui: 'normal',
+                                                            text: 'Add Associated Surgeons'
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: 'fieldset',
+                                                    defaults: {                                                            
+                                                        labelAlign: 'left',
+                                                        labelWidth: '30%'
+                                                    },                                                        
+                                                    items: [
+                                                        {
+                                                            xtype: 'textfield',
+                                                            id: 'name',
+                                                            name: 'name',
+                                                            label: 'Name of Practice',
+                                                            placeHolder: 'Required',
+                                                            required: true
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            name: 'address1',
+                                                            label: 'Address 1',
+                                                            placeHolder: '123 Street'
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            name: 'address2',
+                                                            label: 'Address 2',
+                                                            placeHolder: 'Suite Name'
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            name: 'city',
+                                                            label: 'City',
+                                                            placeHolder: 'City'
+                                                        },
+                                                        {
+                                                            xtype: 'selectfield',
+                                                            name: 'state',
+                                                            label: 'State',
+                                                            placeHolder: 'Select',
+                                                            valueField: 'state',
+                                                            displayField: 'state',
+                                                            store: 'usstates'
+
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            name: 'zip',
+                                                            label: 'Zip Code',
+                                                            placeHolder: '12345'
+                                                        },
+                                                        {
+                                                            xtype: 'textfield',
+                                                            name: 'telephone',
+                                                            label: 'Telephone',
+                                                            placeHolder: '555-555-5555'
+                                                        },
+                                                        {
+                                                            xtype: 'emailfield',
+                                                            name: 'email',
+                                                            label: 'Email',
+                                                            placeHolder: 'email@domain.com'
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                    ],
+                                    scrollable: null
+                                });
+                            }else{
+                                this.overlay.show()
+                            }
+                        }
                     },
                     {
                         xtype: 'spacer',
@@ -29,7 +195,6 @@ Ext.define('testing.view.mainpanels', {
                         xtype: 'searchfield',
                         ui: 'round',
                         placeHolder: 'Search...',
-                        
                         listeners: {
                             scope: this,
                             clearicontap: function() {
@@ -53,22 +218,17 @@ Ext.define('testing.view.mainpanels', {
                                 text: 'By Practice', 
                                 pressed: true,
                                 width: '50%',
-                                listeners: {
-                                    activate: function() {
-                                        UserFilter.filterAction();
-                                    }
-                                },
                                 handler: function() {
-                                    UserFilter.filterType = 'practice';
-                                    UserFilter.filterAction();
+                                    Ext.getCmp('localdoctorlist').hide();
+                                    Ext.getCmp('localpracticelist').show();
                                 }
                             },
                             {
                                 text: 'By Doctor',
                                 width: '50%',
                                 handler: function() {
-                                    UserFilter.filterType = 'doctor';
-                                    UserFilter.filterAction();
+                                    Ext.getCmp('localpracticelist').hide();
+                                    Ext.getCmp('localdoctorlist').show();
                                 }
                             }
                         ]
@@ -78,102 +238,11 @@ Ext.define('testing.view.mainpanels', {
                         padding: '10'
                     },
 					{
-						xtype: 'contacts',
-                        listeners: {
-                            itemtap: function(list, index, item, e) {
-                                var detailsPanel = Ext.create('Ext.Panel', {
-                                    title: 'Details',
-                                    layout: 'vbox',
-                                    width: '100%',
-                                    items: [
-                                        {// Details information
-                                            xtype: 'panel',
-                                            layout: 'vbox',
-                                            items: [
-                                                {// Display information
-                                                    xtype: 'panel',
-                                                    layout: 'hbox',
-                                                    items: [
-                                                        {
-                                                            xtype: 'panel',
-                                                            html: e.get('firstName') + ' ' + e.get('lastName'),
-                                                            width: '40%'
-                                                        },
-                                                        {
-                                                            xtype: 'panel',
-                                                            html: e.get('telephone') + '<BR>' + e.get('city') + ', ' + e.get('state'),
-                                                            width: '40%'
-                                                        },
-                                                        {
-                                                            xtype: 'button',
-                                                            text: 'Edit',
-                                                            width: '20%'
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    xtype: 'spacer',
-                                                    padding: '20'
-                                                },
-                                                {// Note box
-                                                    xtype: 'textareafield',
-                                                    ui: 'round',
-                                                    name: 'note',
-                                                    fieldLabel: 'Note',
-                                                    placeHolder: 'Note',
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            xtype: 'panel',
-                                            padding: '20'
-                                        },
-                                        {// Assessments
-                                            xtype: 'panel',
-                                            layout: 'vbox',
-                                            items: [
-                                                {
-                                                    xtype: 'toolbar',
-                                                    html: 'Assessments',
-                                                    padding: 10,
-                                                    items: [
-                                                        {
-                                                            xtype: 'button',
-                                                            text: 'Add',
-                                                            docked: 'right',
-                                                            width: 100,
-                                                            handler: function() {
-                                                                var assessmentStore = Ext.getStore('Assessment');
-                                                                var assessmentModel = Ext.create('testing.model.Assessment', {
-                                                                    'regDate' : '26/03/2013',
-                                                                    'status' : 'In Progress',
-                                                                    'name' : 'Marcus Welby'
-                                                                });
-                                                                assessmentStore.add(assessmentModel);
-                                                            }
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    xtype: 'list',
-                                                    height: 138,
-                                                    store: 'Assessment',
-                                                    itemTpl: '<div><strong>{regDate}</strong> {status} {name}</div>'
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                });
-                                
-                                var assessmentStore = Ext.getStore('Assessment');
-                                assessmentStore.removeAll();
-                                
-                                var rightPanel = Ext.getCmp('rightpanel');
-                                rightPanel.removeAll(true, true);
-                                rightPanel.add([detailsPanel]);
-                            }
-                        }
-					}
+						xtype: 'localpracticelist'
+					},
+                    {
+                        xtype: 'localdoctorlist'
+                    }
 				]
 			},
 			{

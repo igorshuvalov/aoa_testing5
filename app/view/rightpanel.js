@@ -1,4 +1,4 @@
-Ext.define('testing.view.rightpanel', {
+Ext.define('aoa.view.rightpanel', {
     extend: 'Ext.Panel',
     xtype: 'rightpanel',
     config: {

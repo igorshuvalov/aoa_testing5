@@ -1,4 +1,4 @@
-Ext.define('aoa.store.Assessment', {
+Ext.define('aoa.store.DoctorAssessment', {
     extend: 'Ext.data.Store',
 
     config: {
@@ -7,7 +7,7 @@ Ext.define('aoa.store.Assessment', {
         sorters: 'regDate',
         grouper: {
             groupFn: function(record) {
-                return record.get('regDate');
+                return record.get('name')[0].toUpperCase();
             }
         }
     }

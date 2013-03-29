@@ -1,4 +1,4 @@
-Ext.define('testing.view.sidebar', {
+Ext.define('aoa.view.sidebar', {
     extend: 'Ext.Container',
     xtype: 'sidebar',
 	requires: [
@@ -25,7 +25,7 @@ Ext.define('testing.view.sidebar', {
 								ui: 'back',
 								align: 'left',
 								handler: function() {
-									var main = Ext.create('testing.view.Main');
+									var main = Ext.create('aoa.view.Main');
 									Ext.Viewport.add(main);
 									main.show()
 									Ext.Viewport.getActiveItem().hide()
@@ -40,7 +40,7 @@ Ext.define('testing.view.sidebar', {
     }
 });
 /*
-Ext.define('testing.view.sidebar', {
+Ext.define('aoa.view.sidebar', {
     extend: 'Ext.tab.Panel',
     xtype: 'sidebar',
     requires: [

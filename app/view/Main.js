@@ -1,4 +1,4 @@
-Ext.define('testing.view.Main', {
+Ext.define('aoa.view.Main', {
     extend: 'Ext.Container',
     xtype: 'main',
 	requires: [
@@ -6,12 +6,10 @@ Ext.define('testing.view.Main', {
 	],
     config: {
         tabBarPosition: 'bottom',
-
         items: [
             {
                 styleHtmlContent: true,
                 scrollable: true,
-
                 items: [
 				{
                     docked: 'top',
@@ -61,7 +59,7 @@ Ext.define('testing.view.Main', {
 														text: 'Open New page',
 														handler: function() {
 															this.overlay.hide();	
-															var sidebar = Ext.create('testing.view.sidebar');											
+															var sidebar = Ext.create('aoa.view.sidebar');											
 															Ext.Viewport.add(sidebar);
 															sidebar.show()
 															console.log(Ext.Viewport.getActiveItem().getId())

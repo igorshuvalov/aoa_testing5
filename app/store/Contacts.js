@@ -1,8 +1,8 @@
-Ext.define('testing.store.Contacts', {
+Ext.define('aoa.store.Contacts', {
     extend: 'Ext.data.Store',
 
     config: {
-        model: 'testing.model.Contact',
+        model: 'aoa.model.Contact',
         autoLoad: true,
         sorters: 'firstName',
         grouper: {

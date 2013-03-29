@@ -1,12 +1,12 @@
-Ext.define('testing.view.Contacts', {
+Ext.define('aoa.view.doctors', {
     extend: 'Ext.List',
-    xtype: 'contacts',
+    xtype: 'doctors',
 
     config: {
         title: 'Address Book',
         cls: 'x-contacts',
         store: 'Contacts',
-		height: 500,
+        height: 500,
         grouped: true,
         indexBar: true,
         itemTpl: [

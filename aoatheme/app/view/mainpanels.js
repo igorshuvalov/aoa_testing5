@@ -145,9 +145,9 @@ Ext.define('aoatheme.view.mainpanels', {
 									},
 									itemtap: function(dataview, ix, item, record, event, options){
 										var store = Ext.getStore('LocalDoctors')
-										store.load();			
+										/*store.load();			
 										store.add({firstName: 'Walker',lastName: 'Daniel',title: 'Dr.'});
-										store.sync();									
+										store.sync();*/									
 										if (!this.overlay) {
 											this.overlay = Ext.Viewport.add({
 												xtype: 'panel',

@@ -1,5 +1,3 @@
-var aoa = {};
-aoa.selectedASM = null;
 Ext.define('aoatheme.view.Main', {
     extend: 'Ext.Container',
     xtype: 'main',
@@ -70,7 +68,6 @@ Ext.define('aoatheme.view.Main', {
 															ui: 'small',
 															text: 'Get Started',
 															handler: function() {
-																aoa.selectedASM = 1;
 																this.overlay.hide();
 																Ext.Viewport.setActiveItem({xtype:'sidebar'});
 															}

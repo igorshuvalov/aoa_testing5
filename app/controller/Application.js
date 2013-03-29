@@ -1,4 +1,4 @@
-Ext.define('testing.controller.Application', {
+Ext.define('aoa.controller.Application', {
     extend: 'Ext.app.Controller',
 
     config: {

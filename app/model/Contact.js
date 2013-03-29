@@ -1,4 +1,4 @@
-Ext.define('testing.model.Contact', {
+Ext.define('aoa.model.Contact', {
     extend: 'Ext.data.Model',
 
     config: {

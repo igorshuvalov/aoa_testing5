@@ -372,3 +372,12 @@ body, html, #appLoadingIndicator{
 	font-size: 17px;
 	font-weight: bold;
 }
+.aoa-form-panel .x-form-fieldset .x-form-fieldset-inner{
+	border: none;
+	padding: 3px;
+	box-shadow: 0 2px 3px rgba(0, 0, 0, .65) inset;
+	border-radius: 5px;
+}
+#practice-name-required.warning .x-form-label, #new-doctor-firstname-required.warning .x-form-label, #new-doctor-lastname-required.warning .x-form-label{
+	color: #FF5454;
+}
