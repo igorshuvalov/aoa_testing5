@@ -12,7 +12,7 @@ Ext.application({
         'Ext.MessageBox'
     ],
 
-    views: ['Main','sidebar','mainpanels','Contacts'],
+    views: ['Main','assessmentedit','mainpanels','Contacts'],
 	stores: ['Contacts','Assessments','Doctors','LocalDoctors','usstates','newPractice','newDoctor'],
 	models: ['Contact','Assessments','Doctors','LocalDoctors','PracticeFields','usstates','DoctorFields'],
 	constrollers: ['Application'],

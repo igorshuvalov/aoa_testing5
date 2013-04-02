@@ -5,6 +5,7 @@ Ext.define('aoa.model.Assessment', {
         fields: [
             'assessmentid',
             'regDate',
+            'parsedRegDate',
             'status'
         ]
     }

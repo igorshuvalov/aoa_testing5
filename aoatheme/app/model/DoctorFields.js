@@ -5,7 +5,6 @@ Ext.define('aoatheme.model.DoctorFields', {
         fields: [
             { name: 'firstName', type: 'string' },
 			{ name: 'lastName', type: 'string' },
-			{ name: 'title', type: 'string' },
             { name: 'address_1', type: 'string' },
             { name: 'address_2', type: 'string' },
             { name: 'city', type: 'string' },

@@ -69,7 +69,7 @@ Ext.define('aoatheme.view.Main', {
 															text: 'Get Started',
 															handler: function() {
 																this.overlay.hide();
-																Ext.Viewport.setActiveItem({xtype:'sidebar'});
+																Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
 															}
 														}
 													]

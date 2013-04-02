@@ -29,14 +29,15 @@ Ext.define('aoa.view.LocalPractice', {
                                 var assessmentModel = Ext.create('aoa.model.Assessment', {
                                     'assessmentid' : assessment.get('assessmentid'),
                                     'regDate' : assessment.get('regDate'),
+                                    'parsedRegDate': new Date(assessment.get('regDate')).toDateString(),
                                     'status' : assessment.get('status')
                                 });
                                 assessmentStore.add(assessmentModel);
-                                console.log(assessment.get('assessmentid') + ':' + assessment.get('regDate') + ':' + assessment.get('status'));
                             }
                         });
                     }
                 });
+                assessmentStore.sort('regDate', 'DESC');
                 var detailsPanel = Ext.create('Ext.Panel', {
                     title: 'Details',
                     layout: 'vbox',
@@ -224,27 +225,25 @@ Ext.define('aoa.view.LocalPractice', {
                                             handler: function() {
                                                 var now = new Date();
                                                 var assessmentID = now.getTime();
-                                                var assessmentStore = Ext.getStore('Assessment');
                                                 
-                                                var assessmentModel = Ext.create('aoa.model.Assessment', {
+                                                assessmentModel = Ext.create('aoa.model.Assessment', {
                                                     'assessmentid' : assessmentID,
                                                     'regDate' : now.getTime(),
+                                                    'parsedRegDate': now.toDateString(),
                                                     'status' : 'In Progress'
                                                 });
                                                 assessmentStore.add(assessmentModel);
                                                 
-                                                var localAssessmentStore = Ext.getStore('LocalAssessment');
-                                                var localAssessmentModel = Ext.create('aoa.model.LocalAssessment', {
+                                                localAssessmentModel = Ext.create('aoa.model.LocalAssessment', {
                                                     'assessmentid' : assessmentID,
                                                     'status' : 'In Progress',
-                                                    'regDate' : now.getTime()
+                                                    'regDate' : now.getTime(),
                                                 });
                                                 localAssessmentStore.load();
                                                 localAssessmentStore.add(localAssessmentModel);
                                                 localAssessmentStore.sync();
                                                 
-                                                var localReferenceStore = Ext.getStore('LocalReference');
-                                                var localReferenceModel = Ext.create('aoa.model.LocalReference', {
+                                                localReferenceModel = Ext.create('aoa.model.LocalReference', {
                                                     'referenceid' : now.getTime(),
                                                     'practiceid' : UserProcess.practiceid,
                                                     'assessmentid' : assessmentID
@@ -260,15 +259,16 @@ Ext.define('aoa.view.LocalPractice', {
                                     xtype: 'list',
                                     height: 138,
                                     store: 'Assessment',
-                                    itemTpl: '<div><strong>{regDate}</strong> {status}</div>'
+                                    itemTpl: [
+                                        '<div><strong>',
+                                        '{parsedRegDate}',
+                                        '</strong> {status}</div>'
+                                    ].join('')
                                 }
                             ]
                         }
                     ]
                 });
-                
-                var assessmentStore = Ext.getStore('Assessment');
-                assessmentStore.removeAll();
                 
                 var rightPanel = Ext.getCmp('rightpanel');
                 rightPanel.removeAll(true, true);

@@ -137,7 +137,7 @@ Ext.define('aoatheme.view.Contacts', {
 																				easing: 'ease-out'
 																			},
 																			centered: true,
-																			height: 650,
+																			height: 610,
 																			width: 650,
 																			styleHtmlContent: true,										
 																			items: [
@@ -202,7 +202,7 @@ Ext.define('aoatheme.view.Contacts', {
 																				},
 																				{
 																					xtype: 'formpanel',
-																					height: 525,
+																					height: 482,
 																					cls: 'aoa-form-panel',
 																					scrollable: null,
 																					id: 'add-new-doctor-form',
@@ -370,12 +370,6 @@ var aoa = {
 						}
 					}				
 				}
-			},
-			{
-				xtype: 'textfield',
-				name: 'title',
-				label: 'Title',
-				placeHolder: 'Dr.'
 			},
 			{
 				xtype: 'textfield',
