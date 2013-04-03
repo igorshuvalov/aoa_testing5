@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html manifest="" lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title>AOA</title>
+    <!-- The line below must be kept intact for Sencha Command to build your application -->
+    <script src="touch/sencha-touch-all.js"></script>
+    <link rel="stylesheet" href="resources/css/app.css">
+    <link rel="stylesheet" href="resources/css/aoa.css">
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript">
+        if (!Ext.browser.is.WebKit) {
+            alert("The current browser is unsupported.\n\nSupported browsers:\n" +
+                "Google Chrome\n" +
+                "Apple Safari\n" +
+                "Mobile Safari (iOS)\n" +
+                "Android Browser\n" +
+                "BlackBerry Browser"
+            );
+        }
+    </script>
+</head>
+<body>
+    <div id="appLoadingIndicator">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</body>
+</html>

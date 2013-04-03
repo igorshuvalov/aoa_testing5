@@ -2,15 +2,19 @@ var assm = {
 	editListeners: {
 		checkbox: {
 			change: function(){
-				var val = this.getValue();
-				if(val == false){
+				var check = this.getChecked();
+				if(check == true){
 					this.addCls('checked')
-					this.setValue(true)
 				}else{
 					this.removeCls('checked')
-					this.setValue(false)
 				}				
-			}		
+			},
+			initialize: function(){
+				var check = this.getChecked();
+				if(check == true){
+					this.addCls('checked')
+				}		
+			}
 		},
 		radiofield:{
 			check: function(radioFld, event, obj){
@@ -24,10 +28,27 @@ var assm = {
 						q2Radios[i].removeCls('checked');
 					}					
 				}
+			},
+			initialize: function(){
+				var check = this.getChecked();
+				if(check == true){
+					this.addCls('checked')
+				}		
 			}
 		},
 	}
 };
+var addRule = (function(style){
+    var sheet = document.head.appendChild(style).sheet;
+    return function(selector, css){
+        var propText = Object.keys(css).map(function(p){
+            return p+':'+css[p]
+        }).join(';');
+        sheet.insertRule(selector + '{' + propText + '}', sheet.cssRules.length);
+    }
+})(document.createElement('style'));
+
+
 Ext.define('aoatheme.view.assessmentedit', {
     extend: 'Ext.Container',
     xtype: 'assessmentedit',
@@ -40,7 +61,6 @@ Ext.define('aoatheme.view.assessmentedit', {
 		hideAnimation: 'slideOut',
         items: [
             {
-                title: 'Sidebar',
                 styleHtmlContent: true,
                 scrollable: true,					
                 items: [
@@ -61,6 +81,25 @@ Ext.define('aoatheme.view.assessmentedit', {
 								}
 							},
 							{
+								text: 'Edit',
+								ui: 'small',
+								align: 'right',
+								id: 'assm-edit-btn',
+								cls: 'aoa-titlebar1-right-btn',
+								handler: function() {
+									this.hide();
+									var elems = Ext.ComponentQuery.query('[name="assm-edit-only"]')
+									for(i=0;i<elems.length;i++){
+										elems[i].show();										
+									}
+									var elems = Ext.ComponentQuery.query('fieldset[name="q-fieldset"]')
+									for(i=0;i<elems.length;i++){
+										elems[i].enable();										
+									}									
+									
+								}
+							},
+							{
 								text: 'Notes',
 								ui: 'small',
 								align: 'right',
@@ -72,6 +111,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 						]
 					},
 					{
+						id: 'assm-qs-section',
 						layout: 'vbox',
 						items: [
 							{
@@ -135,6 +175,10 @@ Ext.define('aoatheme.view.assessmentedit', {
 										items: [
 											{
 												layout: 'vbox',
+												xtype: 'fieldset',
+												disabled: true,
+												name: 'q-fieldset',
+												disabled: true,
 												items: [
 													{
 														layout: 'hbox',
@@ -147,7 +191,8 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q1',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 1,
+																		checked: true,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -164,7 +209,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q1',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 2,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -181,7 +226,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q1',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 3,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -198,7 +243,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q1',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 4,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -215,7 +260,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q1',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 5,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -228,7 +273,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 													},
 													{
 														/* edit comments button */			
-
+														hidden: true,
+														name: 'assm-edit-only',
+														cls: 'assm-edit-btn',
 														items: {
 															xtype: 'toolbar',
 															docked: 'bottom',
@@ -282,6 +329,8 @@ Ext.define('aoatheme.view.assessmentedit', {
 											{
 												layout: 'vbox',
 												xtype: 'fieldset',
+												name: 'q-fieldset',
+												disabled: true,
 												items: [
 													{
 														layout: 'hbox',
@@ -313,6 +362,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		cls: 'assm-form-field-radio2',
 																		value: 2,
 																		scope: this,
+																		checked: true,
 																		listeners: assm.editListeners.radiofield
 																	}
 																]
@@ -403,6 +453,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 												items: [
 													{
 														layout: 'hbox',
+														xtype: 'fieldset',
+														name: 'q-fieldset',
+														disabled: true,
 														items:[
 															{
 																layout: 'vbox',
@@ -412,7 +465,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q3',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 1,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -429,7 +482,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q3',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 2,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -446,7 +499,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q3',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 3,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -463,7 +516,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q3',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 4,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -480,7 +533,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 																		xtype: 'checkboxfield',
 																		name: 'biometry-q3',
 																		cls: 'assm-form-field-check',
-																		value: false,
+																		value: 5,
 																		scope: this,
 																		listeners: assm.editListeners.checkbox
 																	},
@@ -492,7 +545,10 @@ Ext.define('aoatheme.view.assessmentedit', {
 														]
 													},
 													{
-														/* edit comments button */			
+														/* edit comments button */
+														hidden: true,
+														cls: 'assm-edit-btn',
+														name: 'assm-edit-only',
 														items: {
 															xtype: 'toolbar',
 															docked: 'bottom',
@@ -546,6 +602,8 @@ Ext.define('aoatheme.view.assessmentedit', {
 											{
 												layout: 'vbox',
 												xtype: 'fieldset',
+												name: 'q-fieldset',
+												disabled: true,
 												items: [
 													{
 														layout: 'hbox',
@@ -634,26 +692,24 @@ Ext.define('aoatheme.view.assessmentedit', {
 										]
 									}
 								]
-							}
-							
-							
-							
-							
-							
+							}							
 						]
 					},
 					{
+						xtype: 'panel',
 						docked: 'bottom',
-						xtype: 'titlebar',
-						cls: 'aoa-titlebar-progress',
-						layout: 'fit',
-						height: 102,
+						cls: 'aoa-progress-dock',				
 						items: [
-							/*{
+							{
 								layout: 'vbox',
 								items: [
 									{
 										layout: 'hbox',
+										defaults: {
+											width: '16.6%',
+											cls: 'progress-group',
+											flex: 1.6
+										},
 										items: [
 											{html: 'Clinical Success'},
 											{html:'Lifestyle Assessment'},
@@ -667,14 +723,148 @@ Ext.define('aoatheme.view.assessmentedit', {
 										xtype: 'fieldset',
 										items: [
 											{
+												layout: 'hbox',
+												defaults: {
+													width: '16.6%',
+													cls: 'progress-group',
+													flex: 1.6,
+													layout: 'hbox'
+												},
+												items: [
+													{
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot checked'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													},
+													{
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot checked'
+															},
+															{
+																cls: 'progress-dot checked'
+															},
+															{
+																cls: 'progress-dot checked'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													},
+													{
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													},
+													{
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													},
+													{
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													},
+													{														
+														items: [
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															},
+															{
+																cls: 'progress-dot'
+															}
+														]
+													}													
+												]
+											},
+											{
 												xtype: 'sliderfield',
 												name: 'assm-progress',
-												value: 60
+												value: 60,
+												disabled: true,
+												listeners: {
+													change: function(elm, sl, thumb, newValue, oldValue, eOpts){
+														addRule('.aoa-progress-dock .x-slider:after', {
+															background: 'linear-gradient(to right, rgba(70,135,148,1) 0%,rgba(70,135,148,1) '+(newValue-.1)+'%,rgba(156,178,187,1) '+newValue+'%,rgba(156,178,187,1) 100%);'
+														});
+													}
+												}
+												
 											}
 										]
 									}
 								]
-							}*/
+							}						
 						]
 					}
 				]

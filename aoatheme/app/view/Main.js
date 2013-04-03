@@ -26,6 +26,8 @@ Ext.define('aoatheme.view.Main', {
 								cls: 'aoa-titlebar1-right-btn',
 								ui: 'small',
 								handler: function() {
+									Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
+									return false
 									if (!this.overlay) {
 										this.overlay = Ext.Viewport.add({
 											xtype: 'panel',
@@ -69,7 +71,7 @@ Ext.define('aoatheme.view.Main', {
 															text: 'Get Started',
 															handler: function() {
 																this.overlay.hide();
-																Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
+																//Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
 															}
 														}
 													]
