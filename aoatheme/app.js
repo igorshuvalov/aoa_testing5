@@ -1,9 +1,9 @@
-//<debug>
+/*//<debug>
 Ext.Loader.setPath({
     'Ext': 'touch/src',
     'aoatheme': 'app'
 });
-//</debug>
+//</debug>*/
 
 Ext.application({
     name: 'aoatheme',
@@ -12,9 +12,9 @@ Ext.application({
         'Ext.MessageBox'
     ],
 
-    views: ['Main','assessmentedit','mainpanels','Contacts'],
-	stores: ['Contacts','Assessments','Doctors','LocalDoctors','usstates','newPractice','newDoctor'],
-	models: ['Contact','Assessments','Doctors','LocalDoctors','PracticeFields','usstates','DoctorFields'],
+    views: ['Main','assessmentedit','mainpanels','Contacts','assmresults','recommendations','notes'],
+	stores: ['Assessments','Doctors','LocalDoctors','usstates','newPractice','newDoctor','notes'],
+	models: ['Assessments','Doctors','LocalDoctors','PracticeFields','usstates','DoctorFields','notes'],
 	constrollers: ['Application'],
 
     icon: {

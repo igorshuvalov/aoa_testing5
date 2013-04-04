@@ -21,6 +21,14 @@ Ext.define('aoa.view.LocalDoctor', {
         listeners: {
             itemtap: function(list, index, item, e) {
                 UserProcess.doctorid = e.get('doctorid');
+                var localDoctorStore = Ext.getStore('LocalDoctor');
+                var doctor;
+                localDoctorStore.each(function(record) {
+                    if (record.get('doctorid') == UserProcess.doctorid) {
+                        doctor = record;
+                    }
+                });
+                
                 var localAssessmentStore = Ext.getStore('LocalAssessment');
                 var localReferenceStore = Ext.getStore('LocalReference');
                 var assessmentStore = Ext.getStore('Assessment');
@@ -41,7 +49,10 @@ Ext.define('aoa.view.LocalDoctor', {
                     }
                 });
                 assessmentStore.sort('regDate', 'DESC');
-                var detailsPanel = Ext.create('Ext.Panel', {
+                if (LocalDoctor.panels.doctorDetails != null) {
+                    LocalDoctor.panels.doctorDetails.destroy();
+                }
+                LocalDoctor.panels.doctorDetails = Ext.create('Ext.Panel', {
                     title: 'Details',
                     layout: 'vbox',
                     width: '100%',
@@ -56,6 +67,7 @@ Ext.define('aoa.view.LocalDoctor', {
                                     flex: 2,
                                     items: [
                                         {
+                                            id: 'doctorDetails',
                                             html: 
                                                 '<div class="aoa-right-panel-top-text">'+
                                                 '    <ul>'+
@@ -83,7 +95,210 @@ Ext.define('aoa.view.LocalDoctor', {
                                                 {
                                                     ui: 'small',
                                                     cls: 'aoa-btn-default-type-a',
-                                                    text: 'Edit'
+                                                    text: 'Edit',
+                                                    handler: function() {
+                                                        if (LocalDoctor.modals.editDoctor == null) {
+                                                            LocalDoctor.modals.editDoctor = Ext.Viewport.add({
+                                                                xtype: 'panel',
+                                                                modal: true,
+                                                                cls: 'aoa-modal-bg-none',
+                                                                hideOnMaskTap: false,
+                                                                showAnimation: {
+                                                                    type: 'popIn',
+                                                                    duration: 250,
+                                                                    easing: 'ease-out'
+                                                                },
+                                                                hideAnimation: {
+                                                                    type: 'popOut',
+                                                                    duration: 250,
+                                                                    easing: 'ease-out'
+                                                                },
+                                                                centered: true,
+                                                                height: 560,
+                                                                width: 650,
+                                                                styleHtmlContent: true,                                        
+                                                                items: [
+                                                                    {
+                                                                        docked: 'top',
+                                                                        xtype: 'toolbar',
+                                                                        title: 'Edit Doctor',
+                                                                        cls: 'aoa-modal-toolbar-type-b',                                        
+                                                                        items: [
+                                                                            {
+                                                                                scope: this,
+                                                                                cls: 'aoa-modal-btn1',
+                                                                                ui: 'back',
+                                                                                text: 'Cancel',
+                                                                                handler: function() {
+                                                                                    LocalDoctor.modals.editDoctor.hide();
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                xtype: 'spacer'
+                                                                            },
+                                                                            {
+                                                                                ui: 'normal',
+                                                                                scope: this,
+                                                                                text: 'Update',
+                                                                                cls: 'aoa-modal-btn1',
+                                                                                id: 'edit-doctor',
+                                                                                handler: function() {
+                                                                                    var form = Ext.getCmp('edit-doctor-form'),
+                                                                                        formValues = form.getValues();
+                                                                                    if(formValues.firstName.length == 0){
+                                                                                        Ext.get('edit-doctor-firstname-required').addCls('warning');
+                                                                                    }
+                                                                                    else if(formValues.lastName.length == 0){
+                                                                                        Ext.get('edit-doctor-lastname-required').addCls('warning');
+                                                                                    }
+                                                                                    else{
+                                                                                        doctor.set('firstName', formValues.firstName);
+                                                                                        doctor.set('lastName', formValues.lastName);
+                                                                                        doctor.set('address1', formValues.address1);
+                                                                                        doctor.set('address2', formValues.address2);
+                                                                                        doctor.set('city', formValues.city);
+                                                                                        doctor.set('state', formValues.state);
+                                                                                        doctor.set('zip', formValues.zip);
+                                                                                        doctor.set('telephone', formValues.telephone);
+                                                                                        doctor.set('email', formValues.email);
+                                                                                        doctor.commit();
+                                                                                        Ext.getCmp('doctorDetails').setHtml(
+                                                                                            '<div class="aoa-right-panel-top-text">'+
+                                                                                            '    <ul>'+
+                                                                                            '        <li class="aoa-group-header">' + doctor.get('firstName') + ' ' + doctor.get('lastName') + '</li>'+
+                                                                                            (doctor.get('telephone') ? '        <li class="aoa-group-item">' + doctor.get('telephone') + '</li>' : '')+
+                                                                                            (doctor.get('address1') ? '        <li class="aoa-group-item">' + doctor.get('address1') + '</li>' : '')+
+                                                                                            (doctor.get('address2') ? '        <li class="aoa-group-item">' + doctor.get('address2') + '</li>' : '')+
+                                                                                            (doctor.get('email') ? '        <li class="aoa-group-item">' + doctor.get('email') + '</li>' : '')+
+                                                                                            '    </ul>'+                        
+                                                                                            '</div>'
+                                                                                        );
+                                                                                        LocalDoctor.modals.editDoctor.hide();
+                                                                                    }
+                                                                                }                                                    
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        html: 
+                                                                            '<div class="aoa-modal-note">'+
+                                                                            '    <span class="aoa-note-title">Edit the account details</span>'+
+                                                                            '    <span class="aoa-note-subtitle">*Indicates required field.</span>'+
+                                                                            '</div>'
+                                                                    },
+                                                                    {
+                                                                        xtype: 'formpanel',
+                                                                        height: 430,
+                                                                        cls: 'aoa-form-panel',
+                                                                        scrollable: null,
+                                                                        id: 'edit-doctor-form',
+                                                                        items: [
+                                                                            {
+                                                                                xtype: 'fieldset',
+                                                                                defaults: {
+                                                                                    labelAlign: 'left',
+                                                                                    labelWidth: '30%'
+                                                                                },                                                        
+                                                                                items: [
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'firstName',
+                                                                                        label: 'First Name of Doctor',
+                                                                                        placeHolder: 'Required',
+                                                                                        id: 'edit-doctor-firstname-required',
+                                                                                        required: true,
+                                                                                        value: doctor.get('firstName'),
+                                                                                        listeners: {
+                                                                                            keyup: function(e, eOpts){
+                                                                                                var form = Ext.getCmp('edit-doctor-form'),
+                                                                                                    formValues = form.getValues();                        
+                                                                                                if(formValues.firstName.length>0){
+                                                                                                    Ext.get('edit-doctor-firstname-required').removeCls('warning');
+                                                                                                }
+                                                                                            }                
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'lastName',
+                                                                                        label: 'Last Name of Doctor',
+                                                                                        placeHolder: 'Required',
+                                                                                        id: 'edit-doctor-lastname-required',
+                                                                                        required: true,
+                                                                                        value: doctor.get('lastName'),
+                                                                                        listeners: {
+                                                                                            keyup: function(e, eOpts){
+                                                                                                var form = Ext.getCmp('edit-doctor-form'),
+                                                                                                    formValues = form.getValues();                        
+                                                                                                if(formValues.lastName.length>0){
+                                                                                                    Ext.get('edit-doctor-lastname-required').removeCls('warning');
+                                                                                                }
+                                                                                            }                
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'address1',
+                                                                                        label: 'Address 1',
+                                                                                        placeHolder: '123 Street',
+                                                                                        value: (doctor.get('address1') ? doctor.get('address1') : '')
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'address2',
+                                                                                        label: 'Address 2',
+                                                                                        placeHolder: 'Suite Name',
+                                                                                        value: (doctor.get('address2') ? doctor.get('address2') : '')
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'city',
+                                                                                        label: 'City',
+                                                                                        placeHolder: 'City',
+                                                                                        value: (doctor.get('city') ? doctor.get('city') : '')
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'selectfield',
+                                                                                        name: 'state',
+                                                                                        label: 'State',
+                                                                                        placeHolder: 'Select',
+                                                                                        valueField: 'state',
+                                                                                        displayField: 'state',
+                                                                                        store: 'usstates',
+                                                                                        value: (doctor.get('state') ? doctor.get('state') : '')
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'zip',
+                                                                                        label: 'Zip Code',
+                                                                                        placeHolder: '12345',
+                                                                                        value: (doctor.get('zip') ? doctor.get('zip') : '')
+                                                                                    },
+                                                                                    {
+                                                                                        xtype: 'textfield',
+                                                                                        name: 'telephone',
+                                                                                        label: 'Telephone',
+                                                                                        placeHolder: '555-555-5555',
+                                                                                        value: (doctor.get('telephone') ? doctor.get('telephone') : '')
+                                                                                    },    
+                                                                                    {
+                                                                                        xtype: 'emailfield',
+                                                                                        name: 'email',
+                                                                                        label: 'Email',
+                                                                                        placeHolder: 'email@domain.com',
+                                                                                        value: (doctor.get('email') ? doctor.get('email') : '')
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                ],
+                                                                scrollable: null
+                                                            });
+                                                        }
+                                                        
+                                                        LocalDoctor.modals.editDoctor.show();
+                                                    }
                                                 }
                                             ]
                                         }
@@ -256,8 +471,17 @@ Ext.define('aoa.view.LocalDoctor', {
                 
                 var rightPanel = Ext.getCmp('rightpanel');
                 rightPanel.removeAll(true, true);
-                rightPanel.add([detailsPanel]);
+                rightPanel.add([LocalDoctor.panels.doctorDetails]);
             }
         }
     }
 });
+
+var LocalDoctor = {
+    panels: {
+        doctorDetails: null
+    },
+    modals: {
+        editDoctor: null
+    }
+};

@@ -118,8 +118,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 								cls: 'assm-divider',
 								html: '<div class="assm-h1">Clinical Success</div>'
 							},
-							
-							
+							{
+								html: '<hr class="hr-divider wide"/>'
+							},						
 							/* Biometry */
 							{
 								cls: 'assm-divider',
@@ -146,8 +147,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 									]								
 								}
 							},
-							
-							
+							{
+								html: '<hr class="hr-divider wide"/>'
+							},
 							/* question 1 */
 							{
 								cls: 'assm-divider',
@@ -301,6 +303,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 									}
 								]
 							},
+							{
+								html: '<hr class="hr-divider"/>'
+							},
 							/* question 2 */
 							{
 								cls: 'assm-divider',
@@ -420,6 +425,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 										]
 									}
 								]
+							},
+							{
+								html: '<hr class="hr-divider"/>'
 							},
 							/* question 3 */
 							{
@@ -573,6 +581,9 @@ Ext.define('aoatheme.view.assessmentedit', {
 										]
 									}
 								]
+							},
+							{
+								html: '<hr class="hr-divider"/>'
 							},
 							/* question 4 */
 							{

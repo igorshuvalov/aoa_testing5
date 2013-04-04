@@ -30,8 +30,8 @@ Ext.define('aoa.view.Contacts', {
 							width: 237,
 							handler: function() {
                                 var associatedSurgeonsIDs = new Array();
-								if (aoa.modals.newPractice == null) {
-									aoa.modals.newPractice = Ext.Viewport.add({
+								if (Contacts.modals.newPractice == null) {
+									Contacts.modals.newPractice = Ext.Viewport.add({
 										xtype: 'panel',
 										modal: true,
 										cls: 'aoa-modal-bg-none',
@@ -63,7 +63,7 @@ Ext.define('aoa.view.Contacts', {
 														ui: 'back',
 														text: 'Back',
 														handler: function() {
-															aoa.modals.newPractice.hide();
+															Contacts.modals.newPractice.hide();
 														}													
 													},
 													{
@@ -80,14 +80,14 @@ Ext.define('aoa.view.Contacts', {
 																formValues = form.getValues();
 															console.log(formValues)
 															if(formValues.name.length == 0){
-																Ext.get('practice-name-required').addCls('warning')
+																Ext.get('new-practice-name-required').addCls('warning')
 															}else{
                                                                 var date = new Date();
                                                                 formValues.practiceid = date.getTime();
                                                                 var localPracticeStore = Ext.getStore('LocalPractice');
                                                                 var localPracticeModel = Ext.create('aoa.model.LocalPractice', formValues);
                                                                 localPracticeStore.add(localPracticeModel);
-                                                                aoa.modals.newPractice.hide();
+                                                                Contacts.modals.newPractice.hide();
                                                                 form.reset();
                                                                 for ( var i = 0; i < associatedSurgeonsIDs.length; i++) {
                                                                     var localReferenceStore = Ext.getStore('LocalReference');
@@ -131,9 +131,9 @@ Ext.define('aoa.view.Contacts', {
 																text: 'Add Associated Surgeons',
 																scope: this,
 																handler: function(){
-																	aoa.modals.newPractice.hide();
-																	if(aoa.modals.newDoctor == null){
-																		aoa.modals.newDoctor = Ext.Viewport.add({
+																	Contacts.modals.newPractice.hide();
+																	if(Contacts.modals.newDoctor == null){
+																		Contacts.modals.newDoctor = Ext.Viewport.add({
 																			xtype: 'panel',
 																			modal: true,
 																			cls: 'aoa-modal-bg-none',
@@ -165,8 +165,8 @@ Ext.define('aoa.view.Contacts', {
 																							ui: 'back',
 																							text: 'Back',
 																							handler: function() {
-																								aoa.modals.newDoctor.hide();
-																								aoa.modals.newPractice.show();
+																								Contacts.modals.newDoctor.hide();
+																								Contacts.modals.newPractice.show();
 																							}
 																						},
 																						{
@@ -196,8 +196,8 @@ Ext.define('aoa.view.Contacts', {
                                                                                                     var localDoctorStore = Ext.getStore('LocalDoctor');
                                                                                                     var localDoctorModel = Ext.create('aoa.model.LocalDoctor', formValues);
                                                                                                     localDoctorStore.add(localDoctorModel);
-                                                                                                    aoa.modals.newDoctor.hide();
-                                                                                                    aoa.modals.newPractice.show();
+                                                                                                    Contacts.modals.newDoctor.hide();
+                                                                                                    Contacts.modals.newPractice.show();
                                                                                                     form.reset();
                                                                                                     associatedSurgeonsIDs[associatedSurgeonsIDs.length] = formValues.doctorid;
 																								}
@@ -254,7 +254,7 @@ Ext.define('aoa.view.Contacts', {
 																								labelAlign: 'left',
 																								labelWidth: '30%'
 																							},														
-																							items: aoa.forms.newDoctor
+																							items: Contacts.forms.newDoctor
 																						}
 																					]
 																				}
@@ -263,7 +263,7 @@ Ext.define('aoa.view.Contacts', {
 																		});
 																	}
 
-																	aoa.modals.newDoctor.show();																
+																	Contacts.modals.newDoctor.show();																
 																}
 															}													
 														]
@@ -274,7 +274,7 @@ Ext.define('aoa.view.Contacts', {
 															labelAlign: 'left',
 															labelWidth: '30%'
 														},														
-														items: aoa.forms.newPractice
+														items: Contacts.forms.newPractice
 													}
 												]
 											},
@@ -282,7 +282,7 @@ Ext.define('aoa.view.Contacts', {
 										scrollable: null
 									});
 								}else{
-									aoa.modals.newPractice.show()
+									Contacts.modals.newPractice.show()
 								}
 							}
 						},
@@ -301,16 +301,16 @@ Ext.define('aoa.view.Contacts', {
 					    listeners: {
 						    scope: this,
 						    clearicontap: function() {
-                                var practiceStore = Ext.getStore('LocalPractice').load();
-                                var doctorStore = Ext.getStore('LocalDoctor').load();
+                                var practiceStore = Ext.getStore('LocalPractice');
+                                var doctorStore = Ext.getStore('LocalDoctor');
                                 
                                 practiceStore.clearFilter();
                                 doctorStore.clearFilter();
                             },
 						    keyup: function(field) {
                                 var value = field.getValue();
-                                var practiceStore = Ext.getStore('LocalPractice').load();
-                                var doctorStore = Ext.getStore('LocalDoctor').load();
+                                var practiceStore = Ext.getStore('LocalPractice');
+                                var doctorStore = Ext.getStore('LocalDoctor');
                                 
                                 practiceStore.clearFilter();
                                 doctorStore.clearFilter();
@@ -348,7 +348,7 @@ Ext.define('aoa.view.Contacts', {
 
                                         for (i = 0; i < regexps.length; i++) {
                                             var search = regexps[i],
-                                                didMatch = record.get('name').match(search);
+                                                didMatch = record.get('firstName').match(search) || record.get('lastName').match(search);
 
                                             matched.push(didMatch);
                                         }
@@ -410,8 +410,8 @@ Ext.define('aoa.view.Contacts', {
     }
 });		
 		
-var aoa = {
-	forms: {	
+var Contacts = {
+	forms: {
 		newDoctor: [
 			{
 				xtype: 'textfield',
@@ -500,14 +500,14 @@ var aoa = {
 				name: 'name',
 				label: 'Name of Practice',
 				placeHolder: 'Required',
-				id: 'practice-name-required',
+				id: 'new-practice-name-required',
 				required: true,
 				listeners: {
 					keyup: function(e, eOpts){
 						var form = Ext.getCmp('add-new-practice-form'),
 							formValues = form.getValues();						
 						if(formValues.name.length>0){
-							Ext.get('practice-name-required').removeCls('warning')
+							Ext.get('new-practice-name-required').removeCls('warning')
 						}
 					}				
 				}

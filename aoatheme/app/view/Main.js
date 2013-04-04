@@ -26,9 +26,14 @@ Ext.define('aoatheme.view.Main', {
 								cls: 'aoa-titlebar1-right-btn',
 								ui: 'small',
 								handler: function() {
-									Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
-									return false
+									//Ext.Viewport.setActiveItem({xtype:'recommendations'});
+									//Ext.Viewport.setActiveItem({xtype:'assmresults'});
+									//Ext.Viewport.setActiveItem({xtype:'assessmentedit'});
+									//return false
 									if (!this.overlay) {
+										this.overlay = Ext.Viewport.add({xtype: 'notes'});										
+										return false
+										
 										this.overlay = Ext.Viewport.add({
 											xtype: 'panel',
 											modal: true,

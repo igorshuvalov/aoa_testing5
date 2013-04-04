@@ -1,3 +1,6 @@
+var aoaCon = {
+
+};
 Ext.define('aoatheme.view.Contacts', {
     extend: 'Ext.List',
     xtype: 'contacts',
@@ -11,7 +14,7 @@ Ext.define('aoatheme.view.Contacts', {
 		'aoatheme.model.PracticeFields',
 		'Ext.carousel.Carousel'
     ],	
-    config: {		
+    config: {
 		items: [
 			{
                     xtype: 'toolbar',
@@ -26,9 +29,7 @@ Ext.define('aoatheme.view.Contacts', {
 							ui: 'normal',
 							width: 237,
 							handler: function() {
-								//if (!this.overlay) {
 								if (aoa.modals.newPractice == null) {
-									//this.overlay = Ext.Viewport.add({
 									aoa.modals.newPractice = Ext.Viewport.add({
 										xtype: 'panel',
 										modal: true,
@@ -284,14 +285,22 @@ Ext.define('aoatheme.view.Contacts', {
                     docked: 'top',
 					cls: 'aoa-list-search-toolbar',
 					items: [
-						{ xtype: 'spacer' },
-						{xtype: 'searchfield',
-						placeHolder: 'Search...'/*,
-						listeners: {
+						{xtype: 'spacer'},
+						{
+							xtype: 'searchfield',
+							placeHolder: 'Search...',
 							scope: this,
-							clearicontap: this.onSearchClearIconTap,
-							keyup: this.onSearchKeyUp
-						}*/				
+							listeners: {								
+								clearicontap: function(){
+									var list = Ext.getCmp('practice-list');
+									list.onSearchClearIconTap()									
+								},
+								keyup: function(){
+									var val = this.getValue();
+									var list = Ext.getCmp('practice-list');
+									list.onSearchKeyUp(val)
+								}
+							}				
 						},
 						{ xtype: 'spacer' }					
 					]
@@ -316,18 +325,76 @@ Ext.define('aoatheme.view.Contacts', {
 				]
 			},
 			{
-				title: 'Address Book',
+				title: 'Practice',
 				cls: 'x-contacts',
 				store: 'newPractice',				
 				grouped: true,
 				height: 600,
-				pinHeaders: false,				
+				pinHeaders: false,
+				id: 'practice-list',
 				xtype: 'list',
 				emptyText: '<div style="margin-top: 20px; text-align: center">No Matching Items</div>',
+				scope: this,
 				itemTpl: [
 					'<div class="aoa-normal-20">{practice_name}</div>'
-				].join('')							
+				].join(''),
+				onSearchKeyUp: function(field) {
+					//get the store and the value of the field
+					var value = field,
+						store = this.getStore();
 
+					//first clear any current filters on thes tore
+					store.clearFilter();
+
+					//check if a value is set first, as if it isnt we dont have to do anything
+					if (value) {
+						//the user could have entered spaces, so we must split them so we can loop through them all
+						var searches = value.split(' '),
+							regexps = [],
+							i;
+
+						//loop them all
+						for (i = 0; i < searches.length; i++) {
+							//if it is nothing, continue
+							if (!searches[i]) continue;
+
+							//if found, create a new regular expression which is case insenstive
+							regexps.push(new RegExp(searches[i], 'i'));
+						}
+
+						//now filter the store by passing a method
+						//the passed method will be called for each record in the store
+						store.filter(function(record) {
+							var matched = [];
+
+							//loop through each of the regular expressions
+							for (i = 0; i < regexps.length; i++) {
+								var search = regexps[i],
+									didMatch = record.get('practice_name').match(search);
+
+								//if it matched the first or last name, push it into the matches array
+								matched.push(didMatch);
+							}
+
+							//if nothing was found, return false (dont so in the store)
+							if (regexps.length > 1 && matched.indexOf(false) != -1) {
+								return false;
+							} else {
+								//else true true (show in the store)
+								return matched[0];
+							}
+						});
+					}
+				},
+
+				/**
+				 * Called when the user taps on the clear icon in the search field.
+				 * It simply removes the filter form the store
+				 */
+				onSearchClearIconTap: function() {
+					//call the clearFilter method on the store instance
+					this.getStore().clearFilter();
+				}
 	
 			}
 		]
@@ -461,8 +528,8 @@ var aoa = {
 				placeHolder: 'Select',
 				valueField: 'state',
 				displayField: 'state',
-				store: 'usstates'
-
+				store: 'usstates',
+				cls: 'aoa-popup-list'
 			},
 			{
 				xtype: 'textfield',
