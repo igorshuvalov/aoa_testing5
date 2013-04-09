@@ -1,0 +1,8 @@
+Changelog.
+
+04/09/2013:
+- completed 'View Surgeons' modal functionality
+- completed 'Edit' practice & doctor details edit form
+- linked 'Add Associated Surgeon' form with:
+	* facility doctors
+	* surgeons list

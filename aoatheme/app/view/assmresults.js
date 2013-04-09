@@ -76,8 +76,6 @@ Ext.define('aoatheme.view.assmresults', {
         title: 'Edit',
         layout: 'fit',
 		iconCls: 'home',
-		showAnimation: 'slideIn',
-		hideAnimation: 'slideOut',
         items: [
             {
                 styleHtmlContent: true,
@@ -95,15 +93,13 @@ Ext.define('aoatheme.view.assmresults', {
 								cls: 'aoa-modal-btn1',
 								align: 'left',
 								handler: function() {
-									Ext.Viewport.getActiveItem().hide()
-									Ext.Viewport.setActiveItem({xtype:'main'});
+									Ext.getCmp('main').setActiveItem(1)
 								}
 							},
 							{
 								text: 'Export',
 								ui: 'small',
 								align: 'right',
-								id: 'assm-edit-btn',
 								cls: 'aoa-titlebar1-right-btn',
 								handler: function() {
 									/* export to PDF code */									
@@ -130,7 +126,6 @@ Ext.define('aoatheme.view.assmresults', {
 						]
 					},
 					{
-						id: 'assm-qs-section',
 						layout: 'vbox',
 						items: [
 							{
@@ -227,7 +222,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]
@@ -292,7 +287,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]
@@ -357,7 +352,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]
@@ -450,7 +445,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]
@@ -515,7 +510,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]
@@ -580,7 +575,7 @@ Ext.define('aoatheme.view.assmresults', {
 															text: 'View Recommendation',
 															scope: this,
 															handler: function() {
-																/*   */															
+																Ext.getCmp('main').setActiveItem(3)
 															}
 														}
 													]

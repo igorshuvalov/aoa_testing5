@@ -12,9 +12,9 @@ Ext.application({
         'Ext.MessageBox'
     ],
 
-    views: ['Main','assessmentedit','mainpanels','Contacts','assmresults','recommendations','notes'],
-	stores: ['Assessments','Doctors','LocalDoctors','usstates','newPractice','newDoctor','notes'],
-	models: ['Assessments','Doctors','LocalDoctors','PracticeFields','usstates','DoctorFields','notes'],
+    views: ['Main','assessmentedit','mainpanels','practices','assmresults','recommendations','modals.notes','modals.welcome','modals.feedback','modals.associated_doctors','modals.selectdoctor','modals.newdoctor','modals.newpractice'],
+	stores: ['assessments','doctors','usstates','newPractice','notes'],
+	models: ['assessments','PracticeFields','usstates','doctors','notes'],
 	constrollers: ['Application'],
 
     icon: {
@@ -41,6 +41,7 @@ Ext.application({
 
         // Initialize the main view
         Ext.Viewport.add(Ext.create('aoatheme.view.Main'));
+		Ext.Viewport.add({xtype:'welcome'});
     },
 
     onUpdated: function() {

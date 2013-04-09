@@ -45,6 +45,9 @@ body, html, #appLoadingIndicator{
 .x-toolbar .x-form-field {
 	padding: 0em .3em 0 .6em;
 }
+.x-field-search .x-field-input .x-form-field {
+	font-size: 18px;
+}
 /* original style overwritten*/
 
 .x-toolbar-dark.aoa-titlebar1{
@@ -75,7 +78,7 @@ body, html, #appLoadingIndicator{
 
 .aoa-right-panel-top-text{
 	color: #333326;
-	box-flex:2.0;
+	box-flex: 2;
 	
 }
 .aoa-right-panel-top-text ul{
@@ -169,7 +172,7 @@ body, html, #appLoadingIndicator{
 	background-color: transparent;
 }
 /* top button */
-.x-button.aoa-left-panel-btn1{
+.x-button.aoa-left-panel-btn1,#associated_doctors_add_doctor_btn{
 	background: #A5A593;
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(165, 165, 147, 1)), color-stop(100%,rgba(105, 105, 94, 1)));
 	background: -webkit-linear-gradient(top, rgba(165, 165, 147, 1) 0%,rgba(105, 105, 94, 1) 100%);
@@ -182,7 +185,7 @@ body, html, #appLoadingIndicator{
 	margin: 0 auto 10px;
 
 }
-.x-button.aoa-left-panel-btn1.x-button-pressing{
+.x-button.aoa-left-panel-btn1.x-button-pressing,#associated_doctors_add_doctor_btn.x-button-pressing{
 	background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,rgba(165, 165, 147, 1)), color-stop(100%,rgba(105, 105, 94, 1)));
 	background: -webkit-linear-gradient(bottom, rgba(165, 165, 147, 1) 0%,rgba(105, 105, 94, 1) 100%);
 	background: linear-gradient(to top, rgba(165, 165, 147, 1) 0%,rgba(105, 105, 94, 1) 100%);
@@ -254,7 +257,7 @@ body, html, #appLoadingIndicator{
 	padding-top: 20px;
 	margin-top: 20px;
 }
-.x-button.aoa-btn-default-type-a{
+.x-button.aoa-btn-default-type-a,.x-button.aoa-add-btn.add-type-a{
 	background: rgb(165,165,147);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(165,165,147,1)), color-stop(100%,rgba(105,105,94,1)));
 	background: -webkit-linear-gradient(top,  rgba(165,165,147,1) 0%,rgba(105,105,94,1) 100%);
@@ -265,7 +268,7 @@ body, html, #appLoadingIndicator{
 	margin: 0;
 	/*padding: .3em .6em;*/
 }
-.x-button.aoa-btn-default-type-a.x-button-pressing{
+.x-button.aoa-btn-default-type-a.x-button-pressing,.x-button.aoa-add-btn.x-button-pressing.add-type-a{
 	background: -webkit-gradient(linear, left bottom, left top, color-stop(0%,rgba(165,165,147,1)), color-stop(100%,rgba(105,105,94,1)));
 	background: -webkit-linear-gradient(bottom,  rgba(165,165,147,1) 0%,rgba(105,105,94,1) 100%);
 	background: linear-gradient(to top,  rgba(165,165,147,1) 0%,rgba(105,105,94,1) 100%);
@@ -306,6 +309,7 @@ body, html, #appLoadingIndicator{
 	-webkit-mask: none;
 	background-size: 100%;
 	height: auto;
+	margin: 0;
 }
 .aoa-btn-default-type-b span{
 	color: #fff;
@@ -345,6 +349,7 @@ body, html, #appLoadingIndicator{
 	font-size: 20px;
 	font-weight: normal;
 	color: #343426;
+	float: left;
 }
 .aoa-bold-17{
 	font-size: 17px;
@@ -359,14 +364,41 @@ body, html, #appLoadingIndicator{
 	-webkit-transition: all .5s;
 	position: absolute;
 	left: 100%;
-	width: 60px;
+	width: 100%;
 	height: 30px;
-	background: red;
+	margin-top: -5px;
+	background: rgba(0, 0, 0, 0);
+	z-index: 99;
+}
+.ready-todelete{
+	left: 0;
+}
+.aoa-delete-alignright{
+	float: right;
+	margin-top: 5px;
+	margin-right: 10px;
+	padding: .3em .6em !important;
+}
+.aoa-delete-alignright .x-button-label{
+	font-size: .7em;
 }
 .delete-confirm{
 	left: 0;
 }
-
+.cancel-delete{
+	box-shadow: 1px 0px 5px 1px rgba(0, 0, 0, .65);
+	transition: all .5s;
+	-webkit-transition: all .5s;
+	width: 23px;
+	height: 23px;
+	background: url('../images/cancel_delete.png') no-repeat;
+	float: left;
+	margin: 4px 0 5px 10px;
+	border-radius: 50%;
+}
+.ready-todelete .cancel-delete{
+	-webkit-transform:rotate(90deg);
+}
 /* add practice modal */
 .aoa-modal-note{
 	padding-bottom: 1.2em;
@@ -848,4 +880,84 @@ body, html, #appLoadingIndicator{
 	background: rgba(0, 0, 0, 0);
 	border-radius: 0;
 	box-shadow: none;
+}
+
+
+/******** main right view settings **********/
+
+#main-right-view,#feedbackBtn{
+	visibility: hidden;
+}
+.aoa-fdb-stars{
+	text-align: center;
+}
+.aoa-inlinebtn{
+	font-size: .7em;
+	width: 35%;
+	height: 33px;
+	margin-top: -5px !important;
+}
+
+/********* view surgeons modal **********/
+#associated_doctors_add_doctor_btn{
+	margin-bottom: 0;
+	font-size: 20px;
+}
+#assocdct_right_panel,#assocdct_right_panel_assm{
+	visibility: hidden;
+}
+#assocdct_right_panel_assm{
+	margin: 0 17px 17px;
+}
+#assocdct_right_panel{
+	padding: 17px;
+	color: #333326;
+}
+#assocdct_right_panel ul{
+	padding: 0;
+}
+#assocdct_right_panel ul li{
+	list-style-type: none;
+}
+#assocdct_right_panel .aoa-group-header{
+	font-size: 25px;
+}
+#assocdct_right_panel .aoa-group-item{
+	font-size: 15px;
+}
+#assocdct_right_panel .aoa-group-item-notes{
+	font-size: 16px;
+}
+h4.assm{
+	font-size: 20px;
+	margin: 0;
+	padding: 5px 0 10px 0;
+}
+.asscdct-assm{
+	padding: .68em;
+}
+#assocdct_right_panel_assm .x-list-item-body{
+	padding: 0;
+}
+.asscdct-assm ul{
+	padding: 0;
+}
+.asscdct-assm ul li{
+	list-style-type: none;
+	float: left;
+}
+.asscdct-right-list{
+	padding: .28em;
+}
+
+.asscdct-assm .ready-todelete{
+	margin-top: -25px;
+}
+.asscdct-assm  .x-button-label{
+	font-size: .7em;
+}
+#associated_doctors-toolbar{
+	border-radius: 0;
+	box-shadow: none;
+	background: #F0F0E1;
 }

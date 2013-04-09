@@ -39,8 +39,6 @@ Ext.define('aoatheme.view.recommendations', {
         title: 'Recommendations',
         layout: 'fit',
 		iconCls: 'home',
-		showAnimation: 'slideIn',
-		hideAnimation: 'slideOut',
         items: [
             {
                 styleHtmlContent: true,
@@ -58,15 +56,13 @@ Ext.define('aoatheme.view.recommendations', {
 								cls: 'aoa-modal-btn1',
 								align: 'left',
 								handler: function() {
-									Ext.Viewport.getActiveItem().hide()
-									Ext.Viewport.setActiveItem({xtype:'main'});
+									Ext.getCmp('main').setActiveItem(2)
 								}
 							},
 							{
 								text: 'Export',
 								ui: 'small',
 								align: 'right',
-								id: 'assm-edit-btn',
 								cls: 'aoa-titlebar1-right-btn',
 								handler: function() {
 									/* export to PDF code */									
@@ -86,7 +82,6 @@ Ext.define('aoatheme.view.recommendations', {
 						]
 					},
 					{
-						id: 'assm-qs-section',
 						layout: 'vbox',
 						items: [
 							{

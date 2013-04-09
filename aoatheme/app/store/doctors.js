@@ -1,25 +1,29 @@
-Ext.define('aoatheme.store.Doctors', {
+Ext.define('aoatheme.store.doctors', {
     extend: 'Ext.data.Store',
     config: {
-        model: 'aoatheme.model.Doctors',
-        sorters: 'id',		
-        grouper: function(record) {
-            return record.get('id')[0];
+        model: 'aoatheme.model.doctors',
+        autoLoad: true,	
+		sorters: 'firstName',
+        grouper: {
+            groupFn: function(record) {
+                return record.get('firstName')[0];
+            }
         },
-		// fields: ['firstName','lastName','title','id']
-        data: [
-			{firstName: 'Julius', lastName: 'Caesar 1', title: 'Dr.', id: 'd01'},
-			{firstName: 'Julius', lastName: 'Caesar 2', title: 'Dr.', id: 'd02'},
-			{firstName: 'Julius', lastName: 'Caesar 3', title: 'Dr.', id: 'd03'},
-			{firstName: 'Julius', lastName: 'Caesar 4', title: 'Dr.', id: 'd04'},
-			{firstName: 'Julius', lastName: 'Caesar 5', title: 'Dr.', id: 'd05'},
-			{firstName: 'Julius', lastName: 'Caesar 6', title: 'Dr.', id: 'd06'},
-			{firstName: 'Julius', lastName: 'Caesar 7', title: 'Dr.', id: 'd07'},
-			{firstName: 'Julius', lastName: 'Caesar 8', title: 'Dr.', id: 'd08'},
-			{firstName: 'Julius', lastName: 'Caesar 9', title: 'Dr.', id: 'd09'},
-			{firstName: 'Julius', lastName: 'Caesar 10', title: 'Dr.', id: 'd10'},
-			{firstName: 'Julius', lastName: 'Caesar 11', title: 'Dr.', id: 'd11'},
-			{firstName: 'Julius', lastName: 'Caesar 12', title: 'Dr.', id: 'd12'}
+		proxy: {
+			type: 'localstorage',
+			id: 'doctors'	
+		},
+        fields: [
+            {name: 'firstName',type: 'string'},
+			{name: 'lastName',type: 'string'},
+            {name: 'address_1',type: 'string'},
+            {name: 'address_2',type: 'string'},
+            {name: 'city',type: 'string'},
+            {name: 'state',type: 'string'},
+            {name: 'zip',type: 'integer'},
+            {name: 'phone',type: 'string'},
+            {name: 'email',type: 'string'},
+			{name: 'practice_id',type: 'string'}
         ]
     }
 });

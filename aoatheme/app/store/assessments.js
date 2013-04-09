@@ -1,15 +1,26 @@
-Ext.define('aoatheme.store.Assessments', {
+Ext.define('aoatheme.store.assessments', {
     extend: 'Ext.data.Store',
     config: {
-        model: 'aoatheme.model.Assessments',
-        sorters: 'asmID',		
+        model: 'aoatheme.model.assessments',
+		autoLoad: true,
+        sorters: {
+			property: 'timestamp',
+			direction: 'DESC'
+		},		
         grouper: function(record) {
-            return record.get('asmID')[0];
+            return record.get('timestamp')[0];
         },
-        data: [
-            {regDate: '08/04/2012', status: 'In Progress', name: 'Dr. Watson', asmID: 0, statusID: 1},
-            {regDate: '08/07/2012', status: 'Completed', name: 'Dr. Marie Curie', asmID: 1, statusID: 0},
-            {regDate: '08/09/2012', status: 'Completed', name: 'Dr Marcel Petiot', asmID: 2, statusID: 0}
+		proxy: {
+			type: 'localstorage',
+			id: 'assessments'	
+		},
+        fields: [
+            {name: 'regDate', type: 'string' },
+			{name: 'status', type: 'string' },
+            {name: 'doctorID', type: 'string' },
+			{name: 'doctorName', type: 'string'},
+            {name: 'practiceID', type: 'string' },
+			{name: 'timestamp', type: 'string'}
         ]
     }
 });

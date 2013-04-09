@@ -52,13 +52,11 @@ var addRule = (function(style){
 Ext.define('aoatheme.view.assessmentedit', {
     extend: 'Ext.Container',
     xtype: 'assessmentedit',
-
+	id: 'assessmentedit',
     config: {
         title: 'Edit',
         layout: 'fit',
 		iconCls: 'home',
-		showAnimation: 'slideIn',
-		hideAnimation: 'slideOut',
         items: [
             {
                 styleHtmlContent: true,
@@ -76,15 +74,13 @@ Ext.define('aoatheme.view.assessmentedit', {
 								cls: 'aoa-modal-btn1',
 								align: 'left',
 								handler: function() {
-									Ext.Viewport.getActiveItem().hide()
-									Ext.Viewport.setActiveItem({xtype:'main'});
+									Ext.getCmp('main').setActiveItem(0)
 								}
 							},
 							{
 								text: 'Edit',
 								ui: 'small',
 								align: 'right',
-								id: 'assm-edit-btn',
 								cls: 'aoa-titlebar1-right-btn',
 								handler: function() {
 									this.hide();
@@ -105,13 +101,16 @@ Ext.define('aoatheme.view.assessmentedit', {
 								align: 'right',
 								cls: 'aoa-titlebar1-right-btn',
 								handler: function() {
-									/* what's this ? */
+									if(aoa.modals.notes == null){
+										aoa.modals.notes = Ext.Viewport.add({xtype: 'notes'});
+									}else{
+										aoa.modals.notes.show()
+									}
 								}
 							}							
 						]
 					},
 					{
-						id: 'assm-qs-section',
 						layout: 'vbox',
 						items: [
 							{
@@ -289,8 +288,8 @@ Ext.define('aoatheme.view.assessmentedit', {
 																	ui: 'normal',
 																	align: 'right',
 																	cls: 'assm-btn-type-b',
-																	handler: function() {
-																		/* what's this ? */
+																	handler: function() {																		
+																		Ext.getCmp('main').setActiveItem(2)
 																	}
 																}
 															]								

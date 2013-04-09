@@ -2,7 +2,7 @@ Ext.define('aoatheme.view.mainpanels', {
     extend: 'Ext.Panel',
     xtype: 'mainpanels',
 	requires: [
-		'Ext.TitleBar','Ext.field.Search','Ext.SegmentedButton','Ext.data.proxy.LocalStorage'
+		'Ext.TitleBar','Ext.field.Search','Ext.SegmentedButton','Ext.data.proxy.LocalStorage','Ext.Anim'
 	],
     config: {
         layout: 'hbox',
@@ -15,7 +15,7 @@ Ext.define('aoatheme.view.mainpanels', {
 				layout: 'fit',
 				items: [
 					{
-						xtype: 'contacts'
+						xtype: 'practices'
 					}
 				]
 			},
@@ -24,6 +24,7 @@ Ext.define('aoatheme.view.mainpanels', {
 				cls: 'aoa-right-panel',
 				flex: 2,
 				layout: 'vbox',
+				id: 'main-right-view',
 				items: [
 					{
 						xtype: 'panel',
@@ -35,17 +36,8 @@ Ext.define('aoatheme.view.mainpanels', {
 								flex: 2,
 								items: [
 									{
-										html: 
-											'<div class="aoa-right-panel-top-text">'+
-											'	<ul>'+
-											'		<li class="aoa-group-header">South Austin Medical</li>'+
-											'		<li class="aoa-group-item">123-123-1234</li>'+
-											'		<li class="aoa-group-item">Address Line 1</li>'+
-											'		<li class="aoa-group-item">Address Line 2</li>'+
-											'		<li class="aoa-group-item">email@domail.com</li>'+
-											'	</ul>'+						
-											'</div>'
-									
+										id: 'practice-address',
+										html:''									
 									},
 									{
 										xtype: 'toolbar',
@@ -53,9 +45,22 @@ Ext.define('aoatheme.view.mainpanels', {
 										cls: 'aoa-list-search-toolbar',
 										items: [											
 											{
-												ui: 'small',
 												cls: 'aoa-btn-default-type-a',
-												text: 'View Surgeons'
+												text: 'View Surgeons',
+												id: 'aoa-view-surgeons',
+												handler: function(){
+													if(aoa.modals.associated_doctors == null){
+														aoa.modals.associated_doctors = Ext.Viewport.add({xtype: 'associated_doctors'});
+													}
+													var dStore = Ext.getStore('doctors');
+													dStore.filter('practice_id',aoa.refs.activePractice);
+													var assocdocTitle = Ext.getCmp('associated_doctors_modal_title');
+													var st = Ext.getStore('newPractice');
+													st.load();
+													var rec = st.getById(aoa.refs.activePractice);
+													assocdocTitle.setTitle(''+rec.data.practice_name+' Doctors');
+													aoa.modals.associated_doctors.show()
+												}
 											},
 											{ xtype: 'spacer' }
 										]
@@ -74,9 +79,30 @@ Ext.define('aoatheme.view.mainpanels', {
 										items: [
 											{ xtype: 'spacer' },
 											{
-												ui: 'small',
 												cls: 'aoa-btn-default-type-a',
-												text: 'Edit'
+												text: 'Edit',
+												handler: function(){
+													aoa.refs.addFormMode = 'update';
+													if(aoa.refs.practiceQueryMode == 'doctorID'){
+														if(aoa.modals.newdoctor == null){
+															aoa.modals.newdoctor = Ext.Viewport.add({xtype: 'newdoctor'});
+														}
+														var doctorForm = Ext.getCmp('add-new-doctor-form');
+														var rec = aoa.st.dct.findRecord('id',aoa.refs.activeDoctor);
+														doctorForm.setValues(rec.data)
+														aoa.modals.newdoctor.show();
+													}else
+													if(aoa.refs.practiceQueryMode == 'practiceID'){
+														if(aoa.modals.newpractice == null){															
+															aoa.modals.newpractice = Ext.Viewport.add({xtype: 'newpractice'});
+														}
+														var practiceForm = Ext.getCmp('add-new-practice-form');
+														var rec = aoa.st.pr.findRecord('id',aoa.refs.activePractice);
+														practiceForm.setValues(rec.data)
+														aoa.modals.newpractice.show();
+													}
+
+												}
 											}									
 										]
 									}
@@ -97,123 +123,86 @@ Ext.define('aoatheme.view.mainpanels', {
 										flex: 2,
 										html: '<h4>Assessments</h4>'									
 									},
-										{
-											xtype: 'panel',
-											flex: 1,								
-											items: [
-												{
-													xtype: 'toolbar',
-													docked: 'top',
-													cls: 'aoa-list-search-toolbar',
-													items: [
-														{ xtype: 'spacer' },
-														{
-															ui: 'small',
-															cls: 'aoa-btn-default-type-a',
-															text: 'Add'
-														}									
-													]
-												}
-											]					
-										}									
+									{
+										xtype: 'panel',
+										flex: 1,								
+										items: [
+											{
+												xtype: 'toolbar',
+												docked: 'top',
+												cls: 'aoa-list-search-toolbar',
+												items: [
+													{ xtype: 'spacer' },
+													{
+														cls: 'aoa-btn-default-type-a',
+														text: 'Add',
+														handler: function(){
+															var assmStore = Ext.getStore('assessments');
+															assmStore.load();														
+															var d=new Date,day=d.getDate(),month=d.getMonth()+1,year=d.getFullYear(),fulldate=day+'/'+month+'/'+year;
+															var newassm = assmStore.add({regDate: fulldate,status: 'In progress',doctorID:'',doctorName:'',practiceID: aoa.refs.activePractice,timestamp:d.getTime()});																
+															assmStore.sync();	
+														}
+													}									
+												]
+											}
+										]					
+									}									
 								]
 							},
 							{
 								height: 138,
 								xtype: 'list',
-								store: 'Assessments',
+								store: 'assessments',
 								cls: 'aoa-right-panel-list',
-								useComponents: true,					
+								id: 'assessment-list',
+								useComponents: true,
+								scope: this,
 								itemTpl:
-									'<div class="aoa-right-list-item">'+
+									'<div class="aoa-right-list-item <tpl if="doctorID == \'\'">no-leaf</tpl>">'+
 									'	<ul class="details">'+
-									'		<li><span class="aoa-bold-17">{regDate}</span></li>'+
-									'		<li><span class="aoa-normal-17">{status}</span></li>'+
-									'		<li class="aoa-list-item-opt aoa-normal-17">{name}</li>'+
+									'		<li style="width:20%"><span class="aoa-bold-17">{regDate}</span></li>'+
+									'		<li style="width:20%"><span class="aoa-normal-17">{status}</span></li>'+
+									'		<li style="width:45%" class="aoa-list-item-opt aoa-normal-17" id="{id}"><tpl><tpl if="doctorID == \'\'"><div class="x-button-normal x-button aoa-btn-default-type-a aoa-inlinebtn x-layout-box-item x-stretched"><span class="x-button-label">Add Doctor</span></div><tpl else>{doctorName}</tpl></tpl></li>'+
 									'	</ul>'+
-									'<div class="deleteplaceholder"></div>'+
+									aoa.tmpl.remove +
 									'</div>',
-								onItemDisclosure: function(){
-									//alert('item open')
-
+								onItemDisclosure: function(record){
+									Ext.getCmp('main').setActiveItem(1)
 								},
 								listeners: {
 									itemswipe: function(dataview, ix, item, record, event, options) {
 										if (event.direction == "left") {
-											console.log(record.get('name'));										
+											aoa.events.deleteItemActive = true;
+											var deleteElm = Ext.get('rem-'+record.data.id+'');
+											deleteElm.addCls('ready-todelete');
+											var abortDel = Ext.get('abort-rem-'+record.data.id+'');
+											abortDel.on('tap',function(){deleteElm.removeCls('ready-todelete');aoa.events.deleteItemActive = false});
+											var confirmRemove = Ext.get('confirm-rem-'+record.data.id+'');
+											confirmRemove.on('tap',function(){	
+												Ext.Anim.run(item, 'fade', {
+													after: function() {
+														var st = Ext.getStore('assessments');
+														st.remove(record);
+														st.sync();
+														aoa.events.deleteItemActive = false
+													},
+													out: true
+												});	
+											});
 										}
 									},
 									itemtap: function(dataview, ix, item, record, event, options){
-										var store = Ext.getStore('LocalDoctors')
-										/*store.load();			
-										store.add({firstName: 'Walker',lastName: 'Daniel',title: 'Dr.'});
-										store.sync();*/									
-										if (!this.overlay) {
-											this.overlay = Ext.Viewport.add({
-												xtype: 'panel',
-												modal: true,
-												cls: 'aoa-modal-bg-none',
-												hideOnMaskTap: false,
-												showAnimation: {
-													type: 'popIn',
-													duration: 250,
-													easing: 'ease-out'
-												},
-												hideAnimation: {
-													type: 'popOut',
-													duration: 250,
-													easing: 'ease-out'
-												},
-												centered: true,
-												height: 485,
-												width: 650,
-												styleHtmlContent: true,										
-												items: [
-													{
-														docked: 'top',
-														xtype: 'toolbar',
-														title: 'Surgeons',
-														cls: 'aoa-modal-toolbar-type-b',										
-														items: [
-															{
-																scope: this,
-																cls: 'aoa-modal-btn1',
-																ui: 'back',
-																text: 'Back',
-																handler: function() {
-																	this.overlay.hide();
-																}													
-															},
-															{
-																xtype: 'spacer'
-															},
-															{ iconCls: 'add',iconMask: true, cls: 'aoa-add-btn'}
-														]
-
-													},
-													{
-														title: 'Doctors List',
-														cls: 'aoa-plain-list',
-														store: 'LocalDoctors',				
-														grouped: false,
-														height: 390,
-														pinHeaders: false,				
-														xtype: 'list',
-														emptyText: '<div style="margin-top: 20px; text-align: center">No Matching Items</div>',
-														itemTpl: [
-															'<div class="aoa-bold-17">{title} {firstName} {lastName}</div>'
-														].join('')
-													}											
-												],
-												scrollable: null
-											});
-										}else{
-											this.overlay.show()
+										var btnTap = aoa.utils.hasCls(event.target,'x-button-label') || aoa.utils.hasCls(event.target,'aoa-inlinebtn');
+										aoa.refs.activeAssessment = record.data.id;
+										if(btnTap == true && aoa.events.deleteItemActive == false){											
+											if (aoa.modals.selectDoctor == null){
+												aoa.modals.selectDoctor = Ext.Viewport.add({xtype:'selectdoctor'});
+											}
+											aoa.modals.selectDoctor.show()
 										}
-
 									}
 								},
-
 								variableHeights: false
 							},
 							{
