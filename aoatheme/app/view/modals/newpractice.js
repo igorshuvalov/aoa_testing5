@@ -43,13 +43,13 @@ Ext.define('aoatheme.view.modals.newpractice', {
 							if(formValues.practice_name.length == 0){
 								Ext.get('practice-name-required').addCls('warning')
 							}else{
-								var store = Ext.getStore('newPractice');
+								var store = aoa.st.pr;
 								store.load();
 								if(aoa.refs.addFormMode == 'insert'){
 									var added = store.add(formValues);
 									store.sync();
 									var practiceID = added[0].id;
-									var dStore = Ext.getStore('doctors');
+									var dStore = aoa.st.dct;
 									var associatedDoctors = aoa.refs.practiceDoctorsTemp;
 									dStore.load();
 									for(i=0;i<associatedDoctors.length;i++){

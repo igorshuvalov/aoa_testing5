@@ -60,7 +60,7 @@ Ext.define('aoatheme.view.modals.selectdoctor', {
 				scope: this,
 				listeners: {
 					itemtap: function(dataview, ix, item, record, event, options){
-						var assmStore = Ext.getStore('assessments');
+						var assmStore = aoa.st.asm;
 						assmStore.load();
 						var rec = assmStore.getById(aoa.refs.activeAssessment);
 						rec.set('doctorID',record.data.id);

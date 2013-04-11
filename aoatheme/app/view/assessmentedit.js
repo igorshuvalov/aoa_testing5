@@ -1,13 +1,145 @@
 var assm = {
+	doUpdate: false,
+	setFieldValues: function(){
+		var st = aoa.st.qset;
+		st.load();
+		var qset = st.findRecord('id',aoa.refs.activeQset).data;		
+		for(i in qset){
+			var q = qset[i];
+			if(q.type){ // check if edited, if is other type of field and if is not a note field
+				var progressDot = Ext.getCmp('pr-'+i+'');
+				progressDot.addCls('checked');
+				if(q.type == 'checkbox'){
+					var checkBoxes = Ext.ComponentQuery.query('checkboxfield[name="'+i+'"]');
+					var checked = q.value;
+					for(j=0;j<checked.length;j++){
+						if(checked[j] == true){
+							checkBoxes[j].check();
+							checkBoxes[j].addCls('checked');
+						}
+					}
+				}else
+				if(q.type == 'radiofield'){
+					var radioFields = Ext.ComponentQuery.query('radiofield[name="'+i+'"]');
+					var checked = q.value;
+					radioFields[checked].check();
+					radioFields[checked].addCls('checked');
+				}
+			}else{
+				if(i.search('notes') != -1){
+					var noteText = qset[i];						
+					if(!qset[i].text){
+						Ext.getCmp(''+i+'-add').show();
+					}else{
+						Ext.getCmp(''+i+'-edit').show();
+					}
+				}
+			}
+		}
+		assm.doUpdate = true;
+		assm.setProgressVal();
+		assm.setResultsCheck()
+	},
+	setResultsCheck: function(){
+		var elm = Ext.DomQuery.select('#dots10-a .checked');
+		if(elm.length == 10){
+			Ext.getCmp('pr-qs1').addCls('checked');
+		}
+		elm = Ext.DomQuery.select('#dots7-a .checked');
+		if(elm.length == 7){
+			Ext.getCmp('pr-qs2').addCls('checked');
+		}
+		elm = Ext.DomQuery.select('#dots7-b .checked');
+		if(elm.length == 7){
+			Ext.getCmp('pr-qs3').addCls('checked');
+		}
+		elm = Ext.DomQuery.select('#dots10-b .checked');
+		if(elm.length == 10){
+			Ext.getCmp('pr-qs4').addCls('checked');
+		}
+		elm = Ext.DomQuery.select('#dots7-c .checked');
+		if(elm.length == 7){
+			Ext.getCmp('pr-qs5').addCls('checked');
+		}
+	},
+	setProgressVal: function(){
+		var st = aoa.st.qset;
+		st.load();
+		var qset = st.findRecord('id',aoa.refs.activeQset).data;
+		var slider = Ext.getCmp('assm-progress-bar');
+		var pval = 0, pmax = 41, sliderVal = 0;
+		for(i in qset){
+			var q = qset[i];
+			if(q.type){ // check if edited, if is other type of field and if is not a note field
+				pval++
+			}
+		}
+		if(pval>0){			
+			sliderVal = 100/(pmax/pval)
+		}
+		addRule('.aoa-progress-dock .x-slider:after', {
+			background: 'linear-gradient(to right, rgba(70,135,148,1) 0%,rgba(70,135,148,1) '+(sliderVal-.1)+'%,rgba(156,178,187,1) '+sliderVal+'%,rgba(156,178,187,1) 100%);'
+		});
+		slider.setValue(sliderVal);	
+		
+	},
+	insertEmptyRecord: function(){
+		var st = aoa.st.qset;
+		st.load();
+		var emptyRec = aoa.emptyQset();
+		var added = st.add(emptyRec);
+		st.sync();
+		return added[0].id
+	},
+	updateRecord: function(type,fieldName){
+		var st = aoa.st.qset;
+		st.load();
+		var qset = st.findRecord('id',aoa.refs.activeQset);
+		if(type == 'checkbox'){
+			var checkBoxes = Ext.ComponentQuery.query('checkboxfield[name="'+fieldName+'"]');
+			var updatedVal = [
+				checkBoxes[0].getChecked(),
+				checkBoxes[1].getChecked(),
+				checkBoxes[2].getChecked(),
+				checkBoxes[3].getChecked(),
+				checkBoxes[4].getChecked(),
+			];
+			var val = {
+				type: 'checkbox',
+				value: updatedVal
+			};
+			qset.set(fieldName,val);
+			st.sync()
+		}		
+		if(type == 'radiofield'){
+			var radios = Ext.ComponentQuery.query('checkboxfield[name="'+fieldName+'"]');
+			var radioChecked;
+			for(i=0;i<radios.length;i++){
+				if(radios[i].getChecked() == true) radioChecked = i;
+			}
+			var val = {
+				type: 'radiofield',
+				value: radioChecked
+			};
+			qset.set(fieldName,val);
+			st.sync()
+		}
+		var progressDot = Ext.getCmp('pr-'+fieldName+'');
+		progressDot.addCls('checked');
+		assm.setProgressVal();
+		assm.setResultsCheck();
+	},
 	editListeners: {
 		checkbox: {
-			change: function(){
-				var check = this.getChecked();
+			change: function(a,b,c,d){
+				if(assm.doUpdate == false) return false;				
+				var check = this.getChecked();				
 				if(check == true){
 					this.addCls('checked')
 				}else{
 					this.removeCls('checked')
-				}				
+				}
+				assm.updateRecord('checkbox',this.config.name)
 			},
 			initialize: function(){
 				var check = this.getChecked();
@@ -18,6 +150,7 @@ var assm = {
 		},
 		radiofield:{
 			check: function(radioFld, event, obj){
+				if(assm.doUpdate == false) return false;
 				var selectedValue = radioFld.getValue(),
 					fieldSetName = radioFld.config.name;
 				var q2Radios = Ext.ComponentQuery.query('radiofield[name="'+fieldSetName+'"]');
@@ -28,6 +161,7 @@ var assm = {
 						q2Radios[i].removeCls('checked');
 					}					
 				}
+				assm.updateRecord('radiofield',this.config.name)
 			},
 			initialize: function(){
 				var check = this.getChecked();
@@ -66,7 +200,8 @@ Ext.define('aoatheme.view.assessmentedit', {
 						docked: 'top',
 						xtype: 'titlebar',
 						cls: 'aoa-titlebar1',
-						title: 'Dr. Marcus Welby',
+						title: '',
+						id: 'assm-page-title',
 						items: [
 							{
 								text: 'Back',
@@ -113,596 +248,11 @@ Ext.define('aoatheme.view.assessmentedit', {
 					{
 						layout: 'vbox',
 						items: [
-							{
-								cls: 'assm-divider',
-								html: '<div class="assm-h1">Clinical Success</div>'
-							},
-							{
-								html: '<hr class="hr-divider wide"/>'
-							},						
-							/* Biometry */
-							{
-								cls: 'assm-divider',
-								items: {
-									xtype: 'toolbar',
-									docked: 'bottom',
-									cls: 'aoa-list-search-toolbar',
-									items: [
-										{
-											cls: 'assm-h2',
-											xtype: 'title',
-											title: 'Biometry (4 Questions)'
-										},
-										{xtype: 'spacer'},
-										{
-											text: 'Add a note',
-											ui: 'normal',
-											align: 'right',
-											cls: 'assm-btn-type-a',
-											handler: function() {
-												/* what's this ? */
-											}
-										}
-									]								
-								}
-							},
-							{
-								html: '<hr class="hr-divider wide"/>'
-							},
-							/* question 1 */
-							{
-								cls: 'assm-divider',
-								layout: 'hbox',
-								items: [
-									{
-										cls: 'assm-left-panel',
-										flex: 1.7,
-										layout: 'vbox',
-										items:[
-											{
-												cls: 'assm-qheader',
-												html: 'Question 1'
-											},
-											{
-												cls: 'assm-qtext',
-												html: '1. What method is used for measuring patient biometry?'											
-											}
-											
-										]
-									},
-									{
-										cls: 'assm-right-panel',
-										flex: 2,
-										items: [
-											{
-												layout: 'vbox',
-												xtype: 'fieldset',
-												disabled: true,
-												name: 'q-fieldset',
-												disabled: true,
-												items: [
-													{
-														layout: 'hbox',
-														items:[
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q1',
-																		cls: 'assm-form-field-check',
-																		value: 1,
-																		checked: true,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Applanation ultrasound with simulated k&rsquo;s from topography</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q1',
-																		cls: 'assm-form-field-check',
-																		value: 2,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Applanation ultrasound with manual or automated keratometry</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q1',
-																		cls: 'assm-form-field-check',
-																		value: 3,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Immersion ultrasound with simulated k&rsquo;s from topography</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q1',
-																		cls: 'assm-form-field-check',
-																		value: 4,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Immersion ultrasound with manual or automated keratometry</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q1',
-																		cls: 'assm-form-field-check',
-																		value: 5,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Integrated optical biometry (e.g., IOLMaster, Lenstar)</div>'
-																	}
-																]
-															}
-														]
-													},
-													{
-														/* edit comments button */			
-														hidden: true,
-														name: 'assm-edit-only',
-														cls: 'assm-edit-btn',
-														items: {
-															xtype: 'toolbar',
-															docked: 'bottom',
-															cls: 'aoa-list-search-toolbar',
-															items: [
-																{xtype: 'spacer'},
-																{
-																	text: 'Edit Comments',
-																	ui: 'normal',
-																	align: 'right',
-																	cls: 'assm-btn-type-b',
-																	handler: function() {																		
-																		Ext.getCmp('main').setActiveItem(2)
-																	}
-																}
-															]								
-														}													
-													}
-												]
-											}
-										
-										]
-									}
-								]
-							},
-							{
-								html: '<hr class="hr-divider"/>'
-							},
-							/* question 2 */
-							{
-								cls: 'assm-divider',
-								layout: 'hbox',
-								items: [
-									{
-										cls: 'assm-left-panel',
-										flex: 1.7,
-										layout: 'vbox',
-										items:[
-											{
-												cls: 'assm-qheader',
-												html: 'Question 2'
-											},
-											{
-												cls: 'assm-qtext',
-												html: 'How often are biometry measurements verified?'											
-											}
-											
-										]										
-									},
-									{
-										cls: 'assm-right-panel',
-										flex: 2,
-										items: [
-											{
-												layout: 'vbox',
-												xtype: 'fieldset',
-												name: 'q-fieldset',
-												disabled: true,
-												items: [
-													{
-														layout: 'hbox',
-														items:[
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q2',
-																		cls: 'assm-form-field-radio1',
-																		value: 1,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">(Never)</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q2',
-																		cls: 'assm-form-field-radio2',
-																		value: 2,
-																		scope: this,
-																		checked: true,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q2',
-																		cls: 'assm-form-field-radio3',
-																		value: 3,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q2',
-																		cls: 'assm-form-field-radio4',
-																		value: 4,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q2',
-																		cls: 'assm-form-field-radio5',
-																		value: 5,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">(Always)</div>'
-																	}
-																]
-															}
-														]
-													}
-												]
-											}
-										
-										]
-									}
-								]
-							},
-							{
-								html: '<hr class="hr-divider"/>'
-							},
-							/* question 3 */
-							{
-								cls: 'assm-divider',
-								layout: 'hbox',
-								items: [
-									{
-										cls: 'assm-left-panel',
-										flex: 1.7,
-										layout: 'vbox',
-										items:[
-											{
-												cls: 'assm-qheader',
-												html: 'Question 3'
-											},
-											{
-												cls: 'assm-qtext',
-												html: 'Which of the following advanced diagnostic evaluation '+
-												'tools or methods does the surgeon use? '+
-												'(Select all that apply)'											
-											}
-											
-										]
-									},
-									{
-										cls: 'assm-right-panel',
-										flex: 2,
-										items: [
-											{
-												layout: 'vbox',
-												items: [
-													{
-														layout: 'hbox',
-														xtype: 'fieldset',
-														name: 'q-fieldset',
-														disabled: true,
-														items:[
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q3',
-																		cls: 'assm-form-field-check',
-																		value: 1,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">OCT</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q3',
-																		cls: 'assm-form-field-check',
-																		value: 2,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Pentecam</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q3',
-																		cls: 'assm-form-field-check',
-																		value: 3,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Topography</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q3',
-																		cls: 'assm-form-field-check',
-																		value: 4,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Specular microscopy</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'checkboxfield',
-																		name: 'biometry-q3',
-																		cls: 'assm-form-field-check',
-																		value: 5,
-																		scope: this,
-																		listeners: assm.editListeners.checkbox
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">Dry eye evaluation</div>'
-																	}
-																]
-															}
-														]
-													},
-													{
-														/* edit comments button */
-														hidden: true,
-														cls: 'assm-edit-btn',
-														name: 'assm-edit-only',
-														items: {
-															xtype: 'toolbar',
-															docked: 'bottom',
-															cls: 'aoa-list-search-toolbar',
-															items: [
-																{xtype: 'spacer'},
-																{
-																	text: 'Enter Comments',
-																	ui: 'normal',
-																	align: 'right',
-																	cls: 'assm-btn-type-a',
-																	handler: function() {
-																		/* what's this ? */
-																	}
-																}
-															]								
-														}													
-													}
-												]
-											}
-										
-										]
-									}
-								]
-							},
-							{
-								html: '<hr class="hr-divider"/>'
-							},
-							/* question 4 */
-							{
-								cls: 'assm-divider',
-								layout: 'hbox',
-								items: [
-									{
-										cls: 'assm-left-panel',
-										flex: 1.7,
-										layout: 'vbox',
-										items:[
-											{
-												cls: 'assm-qheader',
-												html: 'Question 4'
-											},
-											{
-												cls: 'assm-qtext',
-												html: 'How often are biometry measurements verified?'											
-											}
-											
-										]
-									},
-									{
-										cls: 'assm-right-panel',
-										flex: 2,
-										items: [
-											{
-												layout: 'vbox',
-												xtype: 'fieldset',
-												name: 'q-fieldset',
-												disabled: true,
-												items: [
-													{
-														layout: 'hbox',
-														items:[
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q4',
-																		cls: 'assm-form-field-radio1',
-																		value: 1,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">(Inconsistently / N/A)</div>'
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q4',
-																		cls: 'assm-form-field-radio2',
-																		value: 2,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q4',
-																		cls: 'assm-form-field-radio3',
-																		value: 3,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q4',
-																		cls: 'assm-form-field-radio4',
-																		value: 4,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	}
-																]
-															},
-															{
-																layout: 'vbox',
-																cls: 'assm-field-group',
-																items: [
-																	{
-																		xtype: 'radiofield',
-																		name: 'biometry-q4',
-																		cls: 'assm-form-field-radio5',
-																		value: 5,
-																		scope: this,
-																		listeners: assm.editListeners.radiofield
-																	},
-																	{
-																		html: '<div class="assm-q-opt-label">(Consistently)</div>'
-																	}
-																]
-															}
-														]
-													}
-												]
-											}
-										
-										]
-									}
-								]
-							}							
+							{xtype: 'clinicalsuccess'},
+							{xtype: 'lifestyleassm'},
+							{xtype: 'stafftraining'},
+							{xtype: 'patientexperience'},
+							{xtype: 'lensrecommendation'}
 						]
 					},
 					{
@@ -720,147 +270,279 @@ Ext.define('aoatheme.view.assessmentedit', {
 											cls: 'progress-group',
 											flex: 1.6
 										},
-										items: [
-											{html: 'Clinical Success'},
-											{html:'Lifestyle Assessment'},
-											{html:'Staff Training'},
-											{html:'Patient Experience'},
-											{html:'Multifocal Recommendation'},
-											{html:'Results'}										
-										]
-									},
-									{
-										xtype: 'fieldset',
-										items: [
+										items: [										
 											{
-												layout: 'hbox',
-												defaults: {
-													width: '16.6%',
-													cls: 'progress-group',
-													flex: 1.6,
-													layout: 'hbox'
-												},
+												layout: 'vbox',												
 												items: [
+													{cls: 'assm-progress-label',html: 'Clinical Success'},
 													{
+														cls: 'dots10',
+														id: 'dots10-a',
+														layout: 'hbox',
 														items: [
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-bq1'
 															},
 															{
-																cls: 'progress-dot checked'
+																cls: 'progress-dot',
+																id: 'pr-bq2'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-bq3'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-bq4'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-iq1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-iq2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-iq3'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-poq1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-poq2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-poq3'
+															}
+														]
+													}
+												],
+											},
+											{
+												layout: 'vbox',
+												items: [
+													{cls: 'assm-progress-label',html:'Lifestyle Assessment'},
+													{
+														cls: 'dots7',
+														id: 'dots7-a',
+														layout: 'hbox',
+														items: [
+															{
+																cls: 'progress-dot',
+																id: 'pr-pqq1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pqq2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pqq3'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pqq4'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-psq1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-psq2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-psq3'
 															}
 														]
 													},
+												]
+											},
+											{
+												layout: 'vbox',
+												items: [
+													{cls: 'assm-progress-label',html:'Staff Training'},
 													{
+														cls: 'dots7',
+														id: 'dots7-b',
+														layout: 'hbox',
 														items: [
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-stq1'
 															},
 															{
-																cls: 'progress-dot checked'
+																cls: 'progress-dot',
+																id: 'pr-stq2'
 															},
 															{
-																cls: 'progress-dot checked'
+																cls: 'progress-dot',
+																id: 'pr-stq3'
 															},
 															{
-																cls: 'progress-dot checked'
+																cls: 'progress-dot',
+																id: 'pr-stq4'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-stq5'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-stq6'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-stq7'
 															}
 														]
-													},
+													}
+												]
+											},
+											{												
+												layout: 'vbox',
+												items: [
+													{cls: 'assm-progress-label',html:'Patient Experience'},
 													{
+														cls: 'dots10',
+														id: 'dots10-b',
+														layout: 'hbox',
 														items: [
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-peq1'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-peq2'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-peq3'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-peq4'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-pjq1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pjq2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pjq3'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pjq4'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pjq5'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-pjq6'
 															}
 														]
-													},
+													}
+												]
+											},
+											{
+												layout: 'vbox',
+												items: [
+													{cls: 'assm-progress-label',html:'Multifocal Recommendation'},
 													{
+														cls: 'dots7',
+														id: 'dots7-c',
+														layout: 'hbox',
 														items: [
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq1'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq2'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq3'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq4'
 															},
 															{
-																cls: 'progress-dot'
-															}
-														]
-													},
-													{
-														items: [
-															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq5'
 															},
 															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq6'
 															},
 															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
-															}
-														]
-													},
-													{														
-														items: [
-															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
-															},
-															{
-																cls: 'progress-dot'
+																cls: 'progress-dot',
+																id: 'pr-lrq7'
 															}
 														]
 													}													
 												]
 											},
 											{
+												layout: 'vbox',
+												items: [
+													{cls: 'assm-progress-label',html:'Results'},
+													{
+														cls: 'dots5',
+														id: 'dots5',
+														layout: 'hbox',
+														items: [
+															{
+																cls: 'progress-dot',
+																id: 'pr-qs1'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-qs2'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-qs3'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-qs4'
+															},
+															{
+																cls: 'progress-dot',
+																id: 'pr-qs5'
+															}
+														]
+													}
+												]
+											}										
+										]
+									},
+									{
+										xtype: 'fieldset',
+										items: [
+											{
 												xtype: 'sliderfield',
 												name: 'assm-progress',
-												value: 60,
+												id: 'assm-progress-bar',
+												value: 0,
 												disabled: true,
 												listeners: {
 													change: function(elm, sl, thumb, newValue, oldValue, eOpts){
@@ -868,8 +550,7 @@ Ext.define('aoatheme.view.assessmentedit', {
 															background: 'linear-gradient(to right, rgba(70,135,148,1) 0%,rgba(70,135,148,1) '+(newValue-.1)+'%,rgba(156,178,187,1) '+newValue+'%,rgba(156,178,187,1) 100%);'
 														});
 													}
-												}
-												
+												}												
 											}
 										]
 									}

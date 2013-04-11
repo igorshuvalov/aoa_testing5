@@ -7,7 +7,7 @@ Ext.define('aoatheme.view.practices', {
         'Ext.Button',
         'Ext.Toolbar',
         'Ext.data.Store',
-		'aoatheme.model.PracticeFields',
+		'aoatheme.model.practices',
 		'Ext.carousel.Carousel'
     ],	
     config: {
@@ -81,7 +81,7 @@ Ext.define('aoatheme.view.practices', {
 									aoa.refs.practiceQueryMode = 'practiceID';
 									var leftList = Ext.getCmp('practice-list');
 									leftList.setItemTpl('<div class="aoa-normal-20">{practice_name}</div>' + aoa.tmpl.remove + '')
-									leftList.setStore('newPractice');
+									leftList.setStore('practices');
 									var searchField = Ext.getCmp('practice-search-field');
 									searchField.fireEvent('keyup');
 								}
@@ -107,7 +107,7 @@ Ext.define('aoatheme.view.practices', {
 			{
 				title: 'Practice',
 				cls: 'x-contacts',
-				store: 'newPractice',				
+				store: 'practices',				
 				grouped: true,
 				height: 600,
 				pinHeaders: false,
@@ -125,7 +125,7 @@ Ext.define('aoatheme.view.practices', {
 							confirmRemove.on('tap',function(){	
 								Ext.Anim.run(item, 'fade', {
 									after: function() {
-										var st = Ext.getStore('newPractice');
+										var st = aoa.st.pr;
 										st.remove(record);
 										st.sync();
 									},
@@ -142,7 +142,7 @@ Ext.define('aoatheme.view.practices', {
 							aoa.refs.activeDoctor = record.data.id;
 							Ext.getCmp('aoa-view-surgeons').hide();
 						}
-						var assmStore = Ext.getStore('assessments');
+						var assmStore = aoa.st.asm;
 						assmStore.load();
 						assmStore.clearFilter();
 						assmStore.filter(aoa.refs.practiceQueryMode, record.data.id);
@@ -152,7 +152,7 @@ Ext.define('aoatheme.view.practices', {
 							feedbackBtn = Ext.getCmp('feedbackBtn'),
 							practiceAddress = Ext.getDom('practice-address'),
 							addressHTML = '<div class="aoa-right-panel-top-text"><ul>';
-						if(this.getStore().getStoreId() == 'newPractice'){
+						if(this.getStore().getStoreId() == 'practices'){
 							var hName = addr.practice_name;
 						}else{
 							var hName = addr.firstName + ' ' + addr.lastName;
@@ -189,7 +189,7 @@ Ext.define('aoatheme.view.practices', {
 				onSearchKeyUp: function(field) {
 					var value = field,
 						store = this.getStore();
-					if(this.getStore().getStoreId() == 'newPractice'){
+					if(this.getStore().getStoreId() == 'practices'){
 						var hName = 'practice';
 					}else{
 						var hName = 'doctors';

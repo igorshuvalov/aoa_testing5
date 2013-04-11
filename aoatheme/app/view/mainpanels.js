@@ -52,10 +52,10 @@ Ext.define('aoatheme.view.mainpanels', {
 													if(aoa.modals.associated_doctors == null){
 														aoa.modals.associated_doctors = Ext.Viewport.add({xtype: 'associated_doctors'});
 													}
-													var dStore = Ext.getStore('doctors');
+													var dStore = aoa.st.dct;
 													dStore.filter('practice_id',aoa.refs.activePractice);
 													var assocdocTitle = Ext.getCmp('associated_doctors_modal_title');
-													var st = Ext.getStore('newPractice');
+													var st = aoa.st.pr;
 													st.load();
 													var rec = st.getById(aoa.refs.activePractice);
 													assocdocTitle.setTitle(''+rec.data.practice_name+' Doctors');
@@ -137,10 +137,11 @@ Ext.define('aoatheme.view.mainpanels', {
 														cls: 'aoa-btn-default-type-a',
 														text: 'Add',
 														handler: function(){
-															var assmStore = Ext.getStore('assessments');
-															assmStore.load();														
-															var d=new Date,day=d.getDate(),month=d.getMonth()+1,year=d.getFullYear(),fulldate=day+'/'+month+'/'+year;
-															var newassm = assmStore.add({regDate: fulldate,status: 'In progress',doctorID:'',doctorName:'',practiceID: aoa.refs.activePractice,timestamp:d.getTime()});																
+															var qsetID = assm.insertEmptyRecord();
+															var assmStore = aoa.st.asm;
+															assmStore.load();	
+															var d=new Date,day=d.getDate(),month=d.getMonth()+1,year=d.getFullYear(),fulldate=day+'/'+month+'/'+year,
+																newassm = assmStore.add({regDate: fulldate,status: 'In progress',doctorID:'',doctorName:'',practiceID: aoa.refs.activePractice,timestamp:d.getTime(),qsetID:qsetID});
 															assmStore.sync();	
 														}
 													}									
@@ -168,7 +169,12 @@ Ext.define('aoatheme.view.mainpanels', {
 									aoa.tmpl.remove +
 									'</div>',
 								onItemDisclosure: function(record){
-									Ext.getCmp('main').setActiveItem(1)
+									var assmPageTitle = Ext.getCmp('assm-page-title');
+									assmPageTitle.setTitle(record.data.doctorName);
+									aoa.refs.activeQset = record.data.qsetID;
+									console.log(aoa.refs.activeQset);
+									assm.setFieldValues(record.data.qsetID);
+									Ext.getCmp('main').setActiveItem('assessmentedit');
 								},
 								listeners: {
 									itemswipe: function(dataview, ix, item, record, event, options) {
@@ -182,10 +188,15 @@ Ext.define('aoatheme.view.mainpanels', {
 											confirmRemove.on('tap',function(){	
 												Ext.Anim.run(item, 'fade', {
 													after: function() {
-														var st = Ext.getStore('assessments');
+														var st = aoa.st.asm;
 														st.remove(record);
 														st.sync();
-														aoa.events.deleteItemActive = false
+														aoa.events.deleteItemActive = false;
+														var qsetID = record.data.qsetID,
+															qstore = aoa.st.qset;
+														var qrec = qstore.findRecord('id',qsetID);
+														qstore.remove(qrec);
+														qstore.sync();
 													},
 													out: true
 												});	

@@ -673,7 +673,7 @@ body, html, #appLoadingIndicator{
 	font-weight: bold;
 	color: rgba(51,51,51,.73);
 	padding: 0 2%;
-	margin: 9px 0 0;
+	margin: 15px 0 0;
 }
 
 .aoa-progress-dock .x-form-fieldset{
@@ -708,15 +708,15 @@ body, html, #appLoadingIndicator{
 .aoa-progress-dock .x-slider-field .x-component-outer{
 	padding: 0;
 }
-.aoa-progress-dock .progress-dot{
+.aoa-progress-dock .progress-dot .x-inner{
 	background-color: #666666;
 	box-shadow: 0 1px 1px rgba(255,255,255,.65), 1px 1px 1px rgba(0,0,0,.65) inset;
 	width: 8px;
 	height: 8px;
 	border-radius: 50%;
-	margin: 0 7%;
+	margin: auto;
 }
-.aoa-progress-dock .progress-dot.checked{
+.aoa-progress-dock .progress-dot.checked .x-inner{
 	background-color: #D96D00;
 }
 
@@ -960,4 +960,22 @@ h4.assm{
 	border-radius: 0;
 	box-shadow: none;
 	background: #F0F0E1;
+}
+
+
+/********** assessment page **********/
+.assm-edit-btn{
+	display: none;
+}
+.dots10 .progress-dot{
+	width: 10%;
+}
+.dots7 .progress-dot{
+	width: 14.2%
+}
+.dots5 .progress-dot{
+	width: 20%;
+}
+.assm-progress-label{
+	height: 40px;
 }

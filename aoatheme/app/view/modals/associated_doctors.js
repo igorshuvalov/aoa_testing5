@@ -120,7 +120,7 @@ Ext.define('aoatheme.view.modals.associated_doctors', {
 											confirmRemove.on('tap',function(){	
 												Ext.Anim.run(item, 'fade', {
 													after: function() {
-														var st = Ext.getStore('newPractice');
+														var st = aoa.st.pr;
 														st.remove(record);
 														st.sync();
 													},
@@ -130,7 +130,7 @@ Ext.define('aoatheme.view.modals.associated_doctors', {
 										}
 									},
 									itemtap: function(elm, index, target, record, e, eOpts){
-										var assmStore = Ext.getStore('assessments');
+										var assmStore = aoa.st.asm;
 										assmStore.clearFilter(true);
 										assmStore.load();
 										assmStore.filter('doctorID', record.data.id);
@@ -139,7 +139,7 @@ Ext.define('aoatheme.view.modals.associated_doctors', {
 											doctorDetails = Ext.getDom('assocdct_right_panel'),
 											mainRightView = Ext.getCmp('assocdct_right_panel_assm'),
 											addressHTML = '<div class="aoa-right-panel-top-text"><ul>';
-										if(this.getStore().getStoreId() == 'newPractice'){
+										if(this.getStore().getStoreId() == 'practices'){
 											var hName = addr.practice_name;
 										}else{
 											var hName = addr.firstName + ' ' + addr.lastName;
@@ -250,7 +250,7 @@ Ext.define('aoatheme.view.modals.associated_doctors', {
 													confirmRemove.on('tap',function(){	
 														Ext.Anim.run(item, 'fade', {
 															after: function() {
-																var st = Ext.getStore('newPractice');
+																var st = aoa.st.pr;
 																st.remove(record);
 																st.sync();
 															},

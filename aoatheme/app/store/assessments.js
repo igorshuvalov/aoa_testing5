@@ -20,7 +20,8 @@ Ext.define('aoatheme.store.assessments', {
             {name: 'doctorID', type: 'string' },
 			{name: 'doctorName', type: 'string'},
             {name: 'practiceID', type: 'string' },
-			{name: 'timestamp', type: 'string'}
+			{name: 'timestamp', type: 'string'},
+			{name: 'qsetID', type: 'string'}
         ]
     }
 });

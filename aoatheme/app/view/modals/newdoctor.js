@@ -57,7 +57,7 @@ Ext.define('aoatheme.view.modals.newdoctor', {
 								errFields++
 							}
 							if(errFields == 0){
-								var store = Ext.getStore('doctors')
+								var store = aoa.st.dct;
 								store.load();
 								
 								if(aoa.refs.addFormMode == 'insert'){
@@ -88,7 +88,13 @@ Ext.define('aoatheme.view.modals.newdoctor', {
 									rec.set('zip',formValues.zip);
 									rec.set('phone',formValues.phone);
 									rec.set('email',formValues.email);
-									store.sync();
+									if(rec.data.practice_id.length>1){
+										// update doctor name in assessment store
+										/*var assmStore = aoa.st.asm;
+										assmStore.load();								
+										assmStore.sync()*/
+									}
+									
 								}
 								aoa.refs.addFormMode = 'insert';
 								aoa.modals.newdoctor.hide();								
@@ -138,7 +144,7 @@ Ext.define('aoatheme.view.modals.newdoctor', {
 										errFields++
 									}
 									if(errFields == 0){
-										var store = Ext.getStore('doctors')
+										var store = aoa.st.dct;
 										store.load();			
 										var added = store.add(formValues);
 										store.sync();																
